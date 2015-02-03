@@ -41,14 +41,20 @@ The topics used by this application can be seen in the table below:
 For more information on the MQTT protocol, see http://mqtt.org/
 
 ##Try it
-In order to try the application, you must have an IoT Foundation organization. This can be done by signing up for an IBM Bluemix trial and creating an instance of the Internet of Things service. This will create an an IoT organization
-where you can register devices. Next, you must register your device with your organization. More detailed instructions can be found at [IBM Internet of Things Foundation](https://internetofthings.ibmcloud.com/#/).
+The IoT Starter application can be used in 2 ways.
+
+### 1. Connect to IoT Quickstart
+In order to connect to IoT Quickstart, all you need to do is specify 'quickstart' as the organization and enter a valid device id. The Auth Token field can be left blank. The device-id is a 12 hexadecimal character MAC address in lower case, without delimiting characters. For example, a36d7c91bf9e. For more details, refer to the [Connect to Quickstart recipe](https://developer.ibm.com/iot/recipes/improvise-connect-quickstart/).
+
+Once the app is connected, you can see the data visualized by going to [IoT Quickstart]() and entering the same device-id in the MAC address field.
+
+### 2. Connect to an IoT organization as a registered device
+In order to try the application as a registered device, you must have an IoT Foundation organization. This can be done by signing up for an IBM Bluemix trial and creating an instance of the Internet of Things service. This will create an IoT organization where you can register devices. Next, you must register your device with your organization. More detailed instructions can be found at [IBM Internet of Things Foundation](https://internetofthings.ibmcloud.com/#/).
 
 On launching the application for the first time, you will need to enter your credentials to connect your device to the IoT Foundation. The required information to connect your device includes:
 
-- Your Organization ID, e.g. ab1cd
-- Your Device ID, e.g. the MAC Address of your device. This should be the same ID as the device that you registered in
-your IoT Foundation organization.
+- Your Organization ID, e.g. ab1cde
+- Your Device ID, e.g. the MAC Address of your device. This should be the same ID as the device that you registered in your IoT Foundation organization.
 - Your device authorization token. This is returned when registering your device with the IoT Foundation.
 
 Once you have entered the necessary credentials, you may activate your device as a sensor. Pressing the 'Activate Sensor' button will connect the device to the IoT Foundation and allow it to begin publishing and receiving data.
