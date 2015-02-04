@@ -66,6 +66,7 @@ public class IoTStarterApplication extends Application {
     // Message log for log activity
     private ArrayList<String> messageLog = new ArrayList<String>();
 
+    private IoTProfile profile;
     private List<IoTProfile> profiles = new ArrayList<IoTProfile>();
     private ArrayList<String> profileNames = new ArrayList<String>();
 
@@ -106,6 +107,7 @@ public class IoTStarterApplication extends Application {
         editor.remove(Constants.AUTH_TOKEN);
         editor.commit();
 
+        this.setProfile(newProfile);
         this.setOrganization(newProfile.getOrganization());
         this.setDeviceId(newProfile.getDeviceID());
         this.setAuthToken(newProfile.getAuthorizationToken());
@@ -123,9 +125,17 @@ public class IoTStarterApplication extends Application {
             return;
         }
 
+        String profileName;
+        if ((profileName = settings.getString("iot:selectedprofile", null)) == null) {
+            profileName = "";
+        }
+
         Map<String,?> profileList = settings.getAll();
         if (profileList != null) {
             for (String key : profileList.keySet()) {
+                if (key.equals("iot:selectedprofile")) {
+                    continue;
+                }
                 Set<String> profile;// = new HashSet<String>();
                 try {
                     // If the stored property is a Set<String> type, parse the profile and add it to the list of
@@ -136,7 +146,8 @@ public class IoTStarterApplication extends Application {
                         this.profiles.add(newProfile);
                         this.profileNames.add(newProfile.getProfileName());
 
-                        if (newProfile.getProfileName().equals("default")) {
+                        if (newProfile.getProfileName().equals(profileName)) {
+                            this.setProfile(newProfile);
                             this.setOrganization(newProfile.getOrganization());
                             this.setDeviceId(newProfile.getDeviceID());
                             this.setAuthToken(newProfile.getAuthorizationToken());
@@ -349,6 +360,17 @@ public class IoTStarterApplication extends Application {
 
     public void setCurrentLocation(Location currentLocation) {
         this.currentLocation = currentLocation;
+    }
+
+    public IoTProfile getProfile() {
+        return profile;
+    }
+
+    public void setProfile(IoTProfile profile) {
+        this.profile = profile;
+        SharedPreferences.Editor editor = settings.edit();
+        editor.putString("iot:selectedprofile", profile.getProfileName());
+        editor.commit();
     }
 
     public List<IoTProfile> getProfiles() {

@@ -143,6 +143,7 @@ public class ProfilesActivity extends Activity {
         ArrayList<IoTProfile> profiles = (ArrayList<IoTProfile>) app.getProfiles();
         for (IoTProfile profile : profiles) {
             if (profile.getProfileName().equals(profileName)) {
+                app.setProfile(profile);
                 app.setOrganization(profile.getOrganization());
                 app.setDeviceId(profile.getDeviceID());
                 app.setAuthToken(profile.getAuthorizationToken());
