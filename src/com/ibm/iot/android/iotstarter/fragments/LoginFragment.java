@@ -13,7 +13,7 @@
  * Contributors:
  *    Mike Robertson - initial contribution
  *******************************************************************************/
-package com.ibm.demo.IoTStarter.fragments;
+package com.ibm.iot.android.iotstarter.fragments;
 
 import android.app.AlertDialog;
 import android.content.*;
@@ -26,13 +26,13 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import com.ibm.demo.IoTStarter.IoTStarterApplication;
-import com.ibm.demo.IoTStarter.R;
-import com.ibm.demo.IoTStarter.activities.MainActivity;
-import com.ibm.demo.IoTStarter.utils.Constants;
-import com.ibm.demo.IoTStarter.utils.DeviceSensor;
-import com.ibm.demo.IoTStarter.utils.LocationUtils;
-import com.ibm.demo.IoTStarter.utils.MqttHandler;
+import com.ibm.iot.android.iotstarter.IoTStarterApplication;
+import com.ibm.iot.android.iotstarter.R;
+import com.ibm.iot.android.iotstarter.activities.MainActivity;
+import com.ibm.iot.android.iotstarter.utils.Constants;
+import com.ibm.iot.android.iotstarter.utils.DeviceSensor;
+import com.ibm.iot.android.iotstarter.utils.LocationUtils;
+import com.ibm.iot.android.iotstarter.utils.MqttHandler;
 
 /**
  * The login fragment of the IoTStarter application. Provides functionality for

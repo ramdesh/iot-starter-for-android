@@ -13,7 +13,7 @@
  * Contributors:
  *    Mike Robertson - initial contribution
  *******************************************************************************/
-package com.ibm.demo.IoTStarter.utils;
+package com.ibm.iot.android.iotstarter.utils;
 
 import android.content.Context;
 import android.content.Intent;
@@ -22,8 +22,8 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.util.Log;
-import com.ibm.demo.IoTStarter.IoTStarterApplication;
-import com.ibm.demo.IoTStarter.fragments.IoTFragment;
+import com.ibm.iot.android.iotstarter.IoTStarterApplication;
+import com.ibm.iot.android.iotstarter.fragments.IoTFragment;
 
 import java.util.Timer;
 import java.util.TimerTask;

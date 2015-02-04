@@ -13,7 +13,7 @@
  * Contributors:
  *    Mike Robertson - initial contribution
  *******************************************************************************/
-package com.ibm.demo.IoTStarter.activities;
+package com.ibm.iot.android.iotstarter.activities;
 
 import android.app.ActionBar;
 import android.app.Activity;
@@ -25,12 +25,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.TextView;
-import com.ibm.demo.IoTStarter.R;
-import com.ibm.demo.IoTStarter.fragments.DrawFragment;
-import com.ibm.demo.IoTStarter.fragments.IoTFragment;
-import com.ibm.demo.IoTStarter.fragments.LogFragment;
-import com.ibm.demo.IoTStarter.fragments.LoginFragment;
-import com.ibm.demo.IoTStarter.utils.Constants;
+import com.ibm.iot.android.iotstarter.R;
+import com.ibm.iot.android.iotstarter.fragments.DrawFragment;
+import com.ibm.iot.android.iotstarter.fragments.IoTFragment;
+import com.ibm.iot.android.iotstarter.fragments.LogFragment;
+import com.ibm.iot.android.iotstarter.fragments.LoginFragment;
+import com.ibm.iot.android.iotstarter.utils.Constants;
 
 import java.util.ArrayList;
 

@@ -13,16 +13,16 @@
  * Contributors:
  *    Mike Robertson - initial contribution
  *******************************************************************************/
-package com.ibm.demo.IoTStarter.fragments;
+package com.ibm.iot.android.iotstarter.fragments;
 
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import com.ibm.demo.IoTStarter.IoTStarterApplication;
-import com.ibm.demo.IoTStarter.R;
-import com.ibm.demo.IoTStarter.views.DrawingView;
+import com.ibm.iot.android.iotstarter.IoTStarterApplication;
+import com.ibm.iot.android.iotstarter.R;
+import com.ibm.iot.android.iotstarter.views.DrawingView;
 
 /**
  * DrawFragment contains the DrawingView for publishing touchmove messages.

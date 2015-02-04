@@ -13,7 +13,7 @@
  * Contributors:
  *    Mike Robertson - initial contribution
  *******************************************************************************/
-package com.ibm.demo.IoTStarter.fragments;
+package com.ibm.iot.android.iotstarter.fragments;
 
 import android.app.AlertDialog;
 import android.app.ListFragment;
@@ -24,10 +24,10 @@ import android.util.Log;
 import android.view.*;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import com.ibm.demo.IoTStarter.IoTStarterApplication;
-import com.ibm.demo.IoTStarter.R;
-import com.ibm.demo.IoTStarter.activities.ProfilesActivity;
-import com.ibm.demo.IoTStarter.utils.Constants;
+import com.ibm.iot.android.iotstarter.IoTStarterApplication;
+import com.ibm.iot.android.iotstarter.R;
+import com.ibm.iot.android.iotstarter.activities.ProfilesActivity;
+import com.ibm.iot.android.iotstarter.utils.Constants;
 
 /**
  * The Log fragment displays text command messages that have been received by the application.

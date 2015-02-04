@@ -13,7 +13,7 @@
  * Contributors:
  *    Mike Robertson - initial contribution
  *******************************************************************************/
-package com.ibm.demo.IoTStarter.activities;
+package com.ibm.iot.android.iotstarter.activities;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -25,10 +25,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.*;
-import com.ibm.demo.IoTStarter.IoTStarterApplication;
-import com.ibm.demo.IoTStarter.R;
-import com.ibm.demo.IoTStarter.utils.Constants;
-import com.ibm.demo.IoTStarter.utils.IoTProfile;
+import com.ibm.iot.android.iotstarter.IoTStarterApplication;
+import com.ibm.iot.android.iotstarter.R;
+import com.ibm.iot.android.iotstarter.utils.Constants;
+import com.ibm.iot.android.iotstarter.utils.IoTProfile;
 
 import java.util.ArrayList;
 

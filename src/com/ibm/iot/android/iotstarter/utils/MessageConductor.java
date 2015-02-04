@@ -13,17 +13,17 @@
  * Contributors:
  *    Mike Robertson - initial contribution
  *******************************************************************************/
-package com.ibm.demo.IoTStarter.utils;
+package com.ibm.iot.android.iotstarter.utils;
 
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.util.Log;
-import com.ibm.demo.IoTStarter.IoTStarterApplication;
-import com.ibm.demo.IoTStarter.activities.*;
-import com.ibm.demo.IoTStarter.fragments.IoTFragment;
-import com.ibm.demo.IoTStarter.fragments.LogFragment;
-import com.ibm.demo.IoTStarter.fragments.LoginFragment;
+import com.ibm.iot.android.iotstarter.IoTStarterApplication;
+import com.ibm.iot.android.iotstarter.activities.*;
+import com.ibm.iot.android.iotstarter.fragments.IoTFragment;
+import com.ibm.iot.android.iotstarter.fragments.LogFragment;
+import com.ibm.iot.android.iotstarter.fragments.LoginFragment;
 import org.json.JSONException;
 import org.json.JSONObject;
 

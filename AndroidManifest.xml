@@ -17,7 +17,7 @@
  *******************************************************************************/
 -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="com.ibm.demo.IoTStarter"
+          package="com.ibm.iot.android.iotstarter"
           android:versionCode="1"
           android:versionName="2.0.0">
     <uses-sdk android:minSdkVersion="13"/>
@@ -34,10 +34,10 @@
         android:label="@string/app_name"
         android:icon="@drawable/ic_icon"
         android:logo="@drawable/ic_logo"
-        android:name=".IoTStarterApplication"
+        android:name="com.ibm.iot.android.iotstarter.IoTStarterApplication"
         android:theme="@style/IoTStarterTheme">
         <activity
-            android:name=".activities.MainActivity"
+            android:name="com.ibm.iot.android.iotstarter.activities.MainActivity"
             android:label="@string/app_name"
             android:launchMode="singleTask">
             <intent-filter>
@@ -47,7 +47,7 @@
         </activity>
 
         <activity
-                android:name=".activities.ProfilesActivity"
+                android:name="com.ibm.iot.android.iotstarter.activities.ProfilesActivity"
                 android:launchMode="singleTask">
         </activity>
 

@@ -13,7 +13,7 @@
  * Contributors:
  *    Mike Robertson - initial contribution
  *******************************************************************************/
-package com.ibm.demo.IoTStarter.fragments;
+package com.ibm.iot.android.iotstarter.fragments;
 
 import android.app.Fragment;
 import android.content.BroadcastReceiver;
@@ -25,10 +25,10 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.EditText;
-import com.ibm.demo.IoTStarter.IoTStarterApplication;
-import com.ibm.demo.IoTStarter.R;
-import com.ibm.demo.IoTStarter.activities.MainActivity;
-import com.ibm.demo.IoTStarter.activities.ProfilesActivity;
+import com.ibm.iot.android.iotstarter.IoTStarterApplication;
+import com.ibm.iot.android.iotstarter.R;
+import com.ibm.iot.android.iotstarter.activities.MainActivity;
+import com.ibm.iot.android.iotstarter.activities.ProfilesActivity;
 
 /**
  * This class provides common properties and functions for fragment subclasses used in the application.

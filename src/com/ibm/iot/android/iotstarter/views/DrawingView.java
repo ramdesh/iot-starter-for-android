@@ -12,7 +12,7 @@
  *
  * Contributors: Allan Marube, Mike Robertson
  *******************************************************************************/
-package com.ibm.demo.IoTStarter.views;
+package com.ibm.iot.android.iotstarter.views;
 
 import android.content.Context;
 import android.graphics.*;
@@ -21,11 +21,11 @@ import android.util.Log;
 import android.view.View;
 import android.view.MotionEvent;
 
-import com.ibm.demo.IoTStarter.IoTStarterApplication;
-import com.ibm.demo.IoTStarter.utils.Constants;
-import com.ibm.demo.IoTStarter.utils.MessageFactory;
-import com.ibm.demo.IoTStarter.utils.MqttHandler;
-import com.ibm.demo.IoTStarter.utils.TopicFactory;
+import com.ibm.iot.android.iotstarter.IoTStarterApplication;
+import com.ibm.iot.android.iotstarter.utils.Constants;
+import com.ibm.iot.android.iotstarter.utils.MessageFactory;
+import com.ibm.iot.android.iotstarter.utils.MqttHandler;
+import com.ibm.iot.android.iotstarter.utils.TopicFactory;
 
 /**
  * View that contains canvas to draw upon, handles all touch Events for

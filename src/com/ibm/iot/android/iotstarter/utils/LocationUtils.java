@@ -13,7 +13,7 @@
  * Contributors:
  *    Mike Robertson - initial contribution
  *******************************************************************************/
-package com.ibm.demo.IoTStarter.utils;
+package com.ibm.iot.android.iotstarter.utils;
 
 import android.content.Context;
 import android.location.Criteria;
@@ -22,8 +22,7 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.util.Log;
-import com.ibm.demo.IoTStarter.IoTStarterApplication;
-import org.eclipse.paho.client.mqttv3.MqttCallback;
+import com.ibm.iot.android.iotstarter.IoTStarterApplication;
 
 /**
  * LocationUtils enables and disables location services so that the application can publish latitude

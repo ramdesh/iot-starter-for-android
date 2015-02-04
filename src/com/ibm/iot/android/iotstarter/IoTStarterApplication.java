@@ -13,7 +13,7 @@
  * Contributors:
  *    Mike Robertson - initial contribution
  *******************************************************************************/
-package com.ibm.demo.IoTStarter;
+package com.ibm.iot.android.iotstarter;
 
 import android.app.Application;
 
@@ -24,9 +24,9 @@ import android.hardware.Camera;
 import android.location.Location;
 import android.util.Log;
 
-import com.ibm.demo.IoTStarter.utils.Constants;
-import com.ibm.demo.IoTStarter.utils.DeviceSensor;
-import com.ibm.demo.IoTStarter.utils.IoTProfile;
+import com.ibm.iot.android.iotstarter.utils.Constants;
+import com.ibm.iot.android.iotstarter.utils.DeviceSensor;
+import com.ibm.iot.android.iotstarter.utils.IoTProfile;
 
 import java.util.*;
 
