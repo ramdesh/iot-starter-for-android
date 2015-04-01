@@ -49,7 +49,7 @@ In order to connect to IoT Quickstart, all you need to do is specify 'quickstart
 Once the app is connected, you can see the data visualized by going to [IoT Quickstart]() and entering the same device-id in the MAC address field.
 
 ### 2. Connect to an IoT organization as a registered device
-In order to try the application as a registered device, you must have an IoT Foundation organization. This can be done by signing up for an IBM Bluemix trial and creating an instance of the Internet of Things service. This will create an IoT organization where you can register devices. Next, you must register your device with your organization. More detailed instructions can be found at [IBM Internet of Things Foundation](https://internetofthings.ibmcloud.com/#/).
+In order to try the application as a registered device, you must have an IoT Foundation organization. This can be done by signing up for an IBM Bluemix trial and creating an instance of the IBM Internet of Things Foundation service. This will create an IoT organization where you can register devices. Next, you must register your device with your organization. When registering your device, create a new device type called `Android` (case sensitive). More detailed instructions on registering devices can be found at [IBM Internet of Things Foundation](https://internetofthings.ibmcloud.com/#/).
 
 On launching the application for the first time, you will need to enter your credentials to connect your device to the IoT Foundation. The required information to connect your device includes:
 
