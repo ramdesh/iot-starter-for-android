@@ -15,11 +15,66 @@ Permissions:
     - android.permission.ACCESS_FINE_LOCATION
         Device requires location services to be able to publish latitude and longitude data
 
+API Level Restrictions:
+Min API Level=7 (Android 2.1)
+    - Features that don't work in API level 7:
+        - Editor putStringSet, Editor apply
+        - TabListener
+        - FragmentTransaction.replace
+        - ActionBar
+        - ActionBar styles
+        - Fragment setHasOptionsMenu, getActivity
+        - Style parent @android:style/TextAppearance.Holo.Widget.ActionBar.Title
+        - Style property android:fontFamily
+        - TLSv1.2
+
+Min API Level=9 (Android 2.3)
+    - Features that don't work in API level 9:
+        - TabListener
+        - FragmentTransaction.replace
+        - ActionBar
+        - ActionBar styles
+        - Fragment setHasOptionsMenu, getActivity
+        - Style parent @android:style/TextAppearance.Holo.Widget.ActionBar.Title
+        - Style property android:fontFamily
+        - TLSv1.2
+
+Min API Level=11 (Android 3.0)
+    - Features that don't work in API level 11:
+        - Style parent @android:style/TextAppearance.Holo.Widget.ActionBar.Title
+        - Style property android:fontFamily
+        - TLSv1.2
+
+Min API Level=13 (Android 3.2)
+    - Features that don't work in API level 13:
+        - Style property android:fontFamily
+        - TLSv1.2
+
+Min API level=?? (Android ???)
+    - Features that don't work in API level ??
+        - TLSv1.2
+
+-Editor.apply = API level 9
+-Editor.putStringSet = API level 11
+
+-Style Property android:fontFamily = API level 16
+-Style Parent @android:style/TextAppearance.Holo.Widget.ActionBar.Title = API level 13
+-Style Parent @android:style/Widget.Holo.ActionBar.TabText = API level 13
+
+-TabListener = API level 11
+-FragmentTransaction.replace = API level 11
+-ActionBar = API level 11
+-ActionBar styles = API level 11
+-Fragment setHasOptionsMenu, getActivity = API level 11
+
+-SSL = API level ??
+
 Main Application Handle:
 - IoTStarterApplication
-  Application persistent data stores profiles that each contain 4 properties:
+  Application persistent data stores profiles that each contain 5 properties:
   - Profile Name - A name for the stored profile. Set by user when saving the profile.
   - Auth Token - Set by user on login layout
+  - Device Type - Defaults to Android
   - Device ID - Set by user on login layout
   - Organization ID - Set by user on login layout
 
@@ -28,36 +83,65 @@ Main Application Handle:
 
   - Publish Count - Updated on message publish (accel, text, touchmove)
   - Receive Count - Updated on message arrived (MqttHandler messageArrived callback)
+  - Unread Count - Updated on message arrived (text)
 
   - Color - Default: Gray, Updated on color message received
 
 Activities:
-- MainActivity: Main activity of the application that provides ActionBar tabs for navigating the application fragments.
+- MainPagerTabActivity: Main activity of the application that provides tabs for navigating the main application fragments.
+- TutorialPagerTabActivity: Activity that provides tabs for the application tutorial.
 - ProfilesActivity: Activity for managing stored profile settings for the application.
+- WebActivity: Activity for displaying Quickstart web page.
 
 Fragments:
-- IoTStarterFragment: Extends Fragment. Implements the menu for Login, IoT and Draw fragments
-- LoginFragment: Extends IoTStarterFragment. This is the first page that is displayed when launching the application.
-- IoTFragment: Extends IoTStarterFragment. Displays info about the connection and sensor data.
-- LogFragment: Extends ListFragment. Displays the list of received text and alert messages.
-- DrawFragment: Extends IoTStarterFragment. Creates the drawing view for creating touchmove messages.
+- IoTStarterPagerFragment: Extends Fragment. Implements the menu for Login, IoT and Draw fragments
+- LoginPagerFragment: Extends IoTStarterFragment. This is the first page that is displayed when launching the application.
+- IoTPagerFragment: Extends IoTStarterFragment. Displays info about the connection and sensor data.
+- LogPagerFragment: Extends ListFragment. Displays the list of received text and alert messages.
+- DrawPagerFragment: Extends IoTStarterFragment. Creates the drawing view for creating touchmove messages.
+- TutorialFragmentA: Page 1 of IoT Starter Tutorial.
+- TutorialFragmentB: Page 2 of IoT Starter Tutorial.
+- TutorialFragmentC: Page 3+4 of IoT Starter Tutorial.
 
 Views:
 - DrawingView - Part of Draw Fragment, background color based on IoTStarterApplication Color property, allows for
                 sending of touchmove messages.
 
 Utils:
-- MqttHandler - Perform all MQTT related actions. Send connection loss intents to Login Fragment and message arrived
-                intents to IoT Fragment.
-- ActionListener - Process results of MQTT API calls, send connection intents to Login Fragment and message publish
-                intents to IoT Fragment.
+- DeviceSensor - Handle device sensors for accelerometer, magnetometer, orientation
+- LocationUtils - Gets latitude and longitude for including in accel messages.
 - MessageConductor - Process received messages, send color intents to IoT Fragment, send text intents to Log Fragment,
                 send alert intents to the active fragment.
-- TopicFactory - Generate command and event topic strings.
 - MessageFactory - Generate message data for publishing to IoT.
-- DeviceSensor - Handle device sensors for accelerometer, magnetometer, orientation
-- IoTProfile - Stores application connection settings.
-- LocationUtils - Gets latitude and longitude for including in accel messages.
+- MyIoTActionListener - Process results of MQTT API calls, send connection intents to Login Fragment and message publish
+                intents to IoT Fragment.
+- MyIoTCallbacks - Process results of MQTT Callbacks
+
+IoT:
+- IoTClient - Provides APIs for interacting with Internet of Things Foundation.
+- IoTActionListener - Interface wrapper around Mqtt ActionListener.
+- IoTCallbacks - Interface wrapper around Mqtt Callbacks.
+- IoTDevice - Stores IoT registered device information.
+
+Application Data Format:
+"iot:selectedprofile" : "<Name of current profile>" - Stores the name of the last used IoTF device profile settings
+"TUTORIAL_SHOWN" : "yes" - If set, indicates the tutorial has already been viewed.
+"<profile name 0>" : {
+    "name:<Name of profile>"                        - User defined name of IoTF device profile
+    "org:<IoTF organization ID>"                    - 6 digit IoTF organization ID
+    "type:<IoTF device type>"                       - Device type as registered on IoTF ("Android")
+    "deviceId:<IoTF device ID>"                     - Device ID as registered on IoTF
+    "authToken:<IoTF device authorization token>"   - Authorization token generated during IoTF device registration
+}
+
+Old Data Format:
+"deviceid" : "<IoTF device ID>"
+"organization" : "<IoTF organization ID>"
+"authtoken" : "<IoTF device authorization token>"
+
+Application Data Compatibility:
+    On launch of application, if settings contains "organization" property, old data format is assumed.
+    Old data properties are read in and stored into the new data format as "Default" profile.
 
 Intents:
 - INTENT_LOGIN - LoginFragment

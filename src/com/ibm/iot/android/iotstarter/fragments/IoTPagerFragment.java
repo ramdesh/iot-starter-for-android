@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2014 IBM Corp.
+ * Copyright (c) 2014-2015 IBM Corp.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -28,23 +28,30 @@ import android.widget.EditText;
 import android.widget.TextView;
 import com.ibm.iot.android.iotstarter.IoTStarterApplication;
 import com.ibm.iot.android.iotstarter.R;
-import com.ibm.iot.android.iotstarter.activities.MainActivity;
+import com.ibm.iot.android.iotstarter.iot.IoTClient;
 import com.ibm.iot.android.iotstarter.utils.Constants;
 import com.ibm.iot.android.iotstarter.utils.MessageFactory;
-import com.ibm.iot.android.iotstarter.utils.MqttHandler;
-import com.ibm.iot.android.iotstarter.utils.TopicFactory;
+import com.ibm.iot.android.iotstarter.utils.MyIoTActionListener;
+import com.ibm.iot.android.iotstarter.views.DrawingView;
+import org.eclipse.paho.client.mqttv3.MqttException;
 
 /**
  * The IoT Fragment is the main fragment of the application that will be displayed while the device is connected
  * to IoT. From this fragment, users can send text event messages. Users can also see the number
  * of messages the device has published and received while connected.
  */
-public class IoTFragment extends IoTStarterFragment {
-    private final static String TAG = IoTFragment.class.getName();
+public class IoTPagerFragment extends IoTStarterPagerFragment {
+    private final static String TAG = IoTPagerFragment.class.getName();
+    private DrawingView drawingView;
 
     /**************************************************************************
      * Fragment functions for establishing the fragment
      **************************************************************************/
+
+    public static IoTPagerFragment newInstance() {
+        IoTPagerFragment i = new IoTPagerFragment();
+        return i;
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -114,13 +121,16 @@ public class IoTFragment extends IoTStarterFragment {
                 handleSendText();
             }
         });
+
+        drawingView = (DrawingView) getActivity().findViewById(R.id.drawing);
+        drawingView.setContext(context);
     }
 
     /**
      * Update strings in the fragment based on IoTStarterApplication values.
      */
     @Override
-    protected void updateViewStrings() {
+    void updateViewStrings() {
         Log.d(TAG, ".updateViewStrings() entered");
         // DeviceId should never be null at this point.
         if (app.getDeviceId() != null) {
@@ -135,8 +145,9 @@ public class IoTFragment extends IoTStarterFragment {
         // Update receive count view.
         processReceiveIntent();
 
-        int unreadCount = app.getUnreadCount();
-        ((MainActivity) getActivity()).updateBadge(getActivity().getActionBar().getTabAt(2), unreadCount);
+        // TODO: Update badge value?
+        //int unreadCount = app.getUnreadCount();
+        //((MainActivity) getActivity()).updateBadge(getActivity().getActionBar().getTabAt(2), unreadCount);
     }
 
     /**************************************************************************
@@ -159,8 +170,24 @@ public class IoTFragment extends IoTStarterFragment {
                         public void onClick(DialogInterface dialog, int whichButton) {
                             Editable value = input.getText();
                             String messageData = MessageFactory.getTextMessage(value.toString());
-                            MqttHandler mqtt = MqttHandler.getInstance(context);
-                            mqtt.publish(TopicFactory.getEventTopic(Constants.TEXT_EVENT), messageData, false, 0);
+                            try {
+                                // create ActionListener to handle message published results
+                                MyIoTActionListener listener = new MyIoTActionListener(context, Constants.ActionStateStatus.PUBLISH);
+                                IoTClient iotClient = IoTClient.getInstance(context);
+                                iotClient.publishEvent(Constants.TEXT_EVENT, "json", messageData, 0, false, listener);
+
+                                int count = app.getPublishCount();
+                                app.setPublishCount(++count);
+
+                                String runningActivity = app.getCurrentRunningActivity();
+                                if (runningActivity != null && runningActivity.equals(IoTPagerFragment.class.getName())) {
+                                    Intent actionIntent = new Intent(Constants.APP_ID + Constants.INTENT_IOT);
+                                    actionIntent.putExtra(Constants.INTENT_DATA, Constants.INTENT_DATA_PUBLISHED);
+                                    context.sendBroadcast(actionIntent);
+                                }
+                            } catch (MqttException e) {
+                                // Publish failed
+                            }
                         }
                     }).setNegativeButton(getResources().getString(R.string.cancel), new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int whichButton) {
@@ -202,7 +229,7 @@ public class IoTFragment extends IoTStarterFragment {
             processAccelEvent();
         } else if (data.equals(Constants.COLOR_EVENT)) {
             Log.d(TAG, "Updating background color");
-            getView().setBackgroundColor(app.getColor());
+            drawingView.setBackgroundColor(app.getColor());
         } else if (data.equals(Constants.ALERT_EVENT)) {
             String message = intent.getStringExtra(Constants.INTENT_DATA_MESSAGE);
             new AlertDialog.Builder(getActivity())

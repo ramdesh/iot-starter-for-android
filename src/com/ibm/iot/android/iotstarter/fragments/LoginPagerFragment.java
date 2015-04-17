@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2014 IBM Corp.
+ * Copyright (c) 2014-2015 IBM Corp.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -24,26 +24,41 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
+import com.google.android.gms.security.ProviderInstaller;
 import com.ibm.iot.android.iotstarter.IoTStarterApplication;
 import com.ibm.iot.android.iotstarter.R;
-import com.ibm.iot.android.iotstarter.activities.MainActivity;
+import com.ibm.iot.android.iotstarter.iot.IoTClient;
 import com.ibm.iot.android.iotstarter.utils.Constants;
 import com.ibm.iot.android.iotstarter.utils.DeviceSensor;
 import com.ibm.iot.android.iotstarter.utils.LocationUtils;
-import com.ibm.iot.android.iotstarter.utils.MqttHandler;
+import com.ibm.iot.android.iotstarter.utils.MyIoTActionListener;
+import org.eclipse.paho.client.mqttv3.MqttException;
+
+import javax.net.SocketFactory;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.TrustManagerFactory;
+import java.security.KeyStore;
+import java.sql.Timestamp;
+import java.util.Date;
 
 /**
  * The login fragment of the IoTStarter application. Provides functionality for
  * connecting to IoT. Also displays device information.
  */
-public class LoginFragment extends IoTStarterFragment {
-    private final static String TAG = LoginFragment.class.getName();
+public class LoginPagerFragment extends IoTStarterPagerFragment {
+    private final static String TAG = LoginPagerFragment.class.getName();
 
     /**************************************************************************
      * Fragment functions for establishing the fragment
      **************************************************************************/
+
+    public static LoginPagerFragment newInstance() {
+        return new LoginPagerFragment();
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -113,7 +128,7 @@ public class LoginFragment extends IoTStarterFragment {
      * Update strings in the fragment based on IoTStarterApplication values.
      */
     @Override
-    protected void updateViewStrings() {
+    void updateViewStrings() {
         Log.d(TAG, ".updateViewStrings() entered");
         // Update only if the organization is set to some non-empty string.
         if (app.getOrganization() != null) {
@@ -131,11 +146,13 @@ public class LoginFragment extends IoTStarterFragment {
 
         // Set 'Connected to IoT' to Yes if MQTT client is connected. Leave as No otherwise.
         if (app.isConnected()) {
-            processConnectIntent();
+            updateConnectedValues();
+            //processConnectIntent();
         }
 
-        int unreadCount = app.getUnreadCount();
-        ((MainActivity) getActivity()).updateBadge(getActivity().getActionBar().getTabAt(2), unreadCount);
+        // TODO: Update badge value?
+        //int unreadCount = app.getUnreadCount();
+        //((MainActivity) getActivity()).updateBadge(getActivity().getActionBar().getTabAt(2), unreadCount);
     }
 
     /**
@@ -159,6 +176,15 @@ public class LoginFragment extends IoTStarterFragment {
                 handleActivate();
             }
         });
+
+        CheckBox checkbox = (CheckBox) getActivity().findViewById(R.id.checkbox_ssl);
+        checkbox.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onCheckboxClicked(v);
+            }
+        });
+        checkbox.setChecked(app.isUseSSL());
     }
 
     /**************************************************************************
@@ -213,21 +239,59 @@ public class LoginFragment extends IoTStarterFragment {
     private void handleActivate() {
         Log.d(TAG, ".handleActivate() entered");
         String buttonTitle = ((Button) getActivity().findViewById(R.id.activateButton)).getText().toString();
-        MqttHandler mqttHandle = MqttHandler.getInstance(context);
         Button activateButton = (Button) getActivity().findViewById(R.id.activateButton);
+        app.setDeviceType(Constants.DEVICE_TYPE);
         app.setDeviceId(((EditText) getActivity().findViewById(R.id.deviceIDValue)).getText().toString());
         app.setOrganization(((EditText) getActivity().findViewById(R.id.organizationValue)).getText().toString());
         app.setAuthToken(((EditText) getActivity().findViewById(R.id.authTokenValue)).getText().toString());
+        IoTClient iotClient = IoTClient.getInstance(context, app.getOrganization(), app.getDeviceId(), app.getDeviceType(), app.getAuthToken());
         activateButton.setEnabled(false);
-        if (buttonTitle.equals(getResources().getString(R.string.activate_button)) && app.isConnected() == false) {
+        if (buttonTitle.equals(getResources().getString(R.string.activate_button)) && !app.isConnected()) {
             if (checkCanConnect()) {
-                mqttHandle.connect();
+                // create ActionListener to handle message published results
+                try {
+                    SocketFactory factory = null;
+                    if (app.isUseSSL()) {
+                        try {
+                            ProviderInstaller.installIfNeeded(context);
+
+                            SSLContext sslContext;
+                            KeyStore ks = KeyStore.getInstance("bks");
+                            ks.load(context.getResources().openRawResource(R.raw.iot), "password".toCharArray());
+                            TrustManagerFactory tmf = TrustManagerFactory.getInstance("X509");
+                            tmf.init(ks);
+                            TrustManager[] tm = tmf.getTrustManagers();
+                            sslContext = SSLContext.getInstance("TLSv1.2");
+                            sslContext.init(null, tm, null);
+                            factory = sslContext.getSocketFactory();
+                        } catch (Exception e) {
+                            // TODO: handle exception
+                            e.printStackTrace();
+                        }
+                    }
+
+                    MyIoTActionListener listener = new MyIoTActionListener(context, Constants.ActionStateStatus.CONNECTING);
+                    iotClient.connectDevice(app.getMyIoTCallbacks(), listener, factory);
+                } catch (MqttException e) {
+                    if (e.getReasonCode() == (Constants.ERROR_BROKER_UNAVAILABLE)) {
+                        // error while connecting to the broker - send an intent to inform the user
+                        Intent actionIntent = new Intent(Constants.ACTION_INTENT_CONNECTIVITY_MESSAGE_RECEIVED);
+                        actionIntent.putExtra(Constants.CONNECTIVITY_MESSAGE, Constants.ERROR_BROKER_UNAVAILABLE);
+                        context.sendBroadcast(actionIntent);
+                    }
+                }
             } else {
                 displaySetPropertiesDialog();
                 activateButton.setEnabled(true);
             }
-        } else if (buttonTitle.equals(getResources().getString(R.string.deactivate_button)) && app.isConnected() == true) {
-            mqttHandle.disconnect();
+        } else if (buttonTitle.equals(getResources().getString(R.string.deactivate_button)) && app.isConnected()) {
+            // create ActionListener to handle message published results
+            try {
+                MyIoTActionListener listener = new MyIoTActionListener(context, Constants.ActionStateStatus.DISCONNECTING);
+                iotClient.disconnectDevice(listener);
+            } catch (MqttException e) {
+                // Disconnect failed
+            }
         }
     }
 
@@ -246,6 +310,13 @@ public class LoginFragment extends IoTStarterFragment {
             showTokenButton.setText(getResources().getString(R.string.showToken_button));
             tokenText.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
         }
+    }
+
+    public void onCheckboxClicked(View view) {
+        boolean checked = ((CheckBox) view).isChecked();
+        Log.d(TAG, ".onCheckboxClicked() Setting useSSL to " + checked);
+
+        app.setUseSSL(checked);
     }
 
     /**************************************************************************
@@ -288,18 +359,33 @@ public class LoginFragment extends IoTStarterFragment {
      */
     private void processConnectIntent() {
         Log.d(TAG, ".processConnectIntent() entered");
-        Button activateButton = (Button) getActivity().findViewById(R.id.activateButton);
-        activateButton.setEnabled(true);
-        String connectedString = this.getString(R.string.is_connected);
-        connectedString = connectedString.replace("No", "Yes");
-        ((TextView) getActivity().findViewById(R.id.isConnected)).setText(connectedString);
-        activateButton.setText(getResources().getString(R.string.deactivate_button));
+        updateConnectedValues();
+
+        // Log message with the following format:
+        // [yyyy-mm-dd hh:mm:ss.S] Connected to server:
+        // <message text>
+        Date date = new Date();
+        String logMessage = "["+new Timestamp(date.getTime())+"] Connected to server";
+        app.getMessageLog().add(logMessage);
+        Intent actionIntent = new Intent(Constants.APP_ID + Constants.INTENT_LOG);
+        actionIntent.putExtra(Constants.INTENT_DATA, Constants.TEXT_EVENT);
+        context.sendBroadcast(actionIntent);
+
         if (app.isAccelEnabled()) {
             LocationUtils locUtils = LocationUtils.getInstance(context);
             locUtils.connect();
             app.setDeviceSensor(DeviceSensor.getInstance(context));
             app.getDeviceSensor().enableSensor();
         }
+    }
+
+    private void updateConnectedValues() {
+        Button activateButton = (Button) getActivity().findViewById(R.id.activateButton);
+        activateButton.setEnabled(true);
+        String connectedString = this.getString(R.string.is_connected);
+        connectedString = connectedString.replace("No", "Yes");
+        ((TextView) getActivity().findViewById(R.id.isConnected)).setText(connectedString);
+        activateButton.setText(getResources().getString(R.string.deactivate_button));
     }
 
     /**
@@ -312,6 +398,17 @@ public class LoginFragment extends IoTStarterFragment {
         activateButton.setEnabled(true);
         ((TextView) getActivity().findViewById(R.id.isConnected)).setText(this.getString(R.string.is_connected));
         activateButton.setText(getResources().getString(R.string.activate_button));
+
+        // Log message with the following format:
+        // [yyyy-mm-dd hh:mm:ss.S] Received alert:
+        // <message text>
+        Date date = new Date();
+        String logMessage = "["+new Timestamp(date.getTime())+"] Disonnected from server";
+        app.getMessageLog().add(logMessage);
+        Intent actionIntent = new Intent(Constants.APP_ID + Constants.INTENT_LOG);
+        actionIntent.putExtra(Constants.INTENT_DATA, Constants.TEXT_EVENT);
+        context.sendBroadcast(actionIntent);
+
         if (app.getDeviceSensor() != null && app.isAccelEnabled()) {
             LocationUtils locUtils = LocationUtils.getInstance(context);
             app.getDeviceSensor().disableSensor();

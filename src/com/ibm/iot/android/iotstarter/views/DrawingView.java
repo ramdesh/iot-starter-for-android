@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2014 IBM Corp.
+ * Copyright (c) 2014-2015 IBM Corp.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -15,17 +15,22 @@
 package com.ibm.iot.android.iotstarter.views;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.*;
 import android.util.AttributeSet;
 import android.util.Log;
-import android.view.View;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
-
+import android.view.View;
 import com.ibm.iot.android.iotstarter.IoTStarterApplication;
+import com.ibm.iot.android.iotstarter.R;
+import com.ibm.iot.android.iotstarter.iot.IoTClient;
 import com.ibm.iot.android.iotstarter.utils.Constants;
 import com.ibm.iot.android.iotstarter.utils.MessageFactory;
-import com.ibm.iot.android.iotstarter.utils.MqttHandler;
-import com.ibm.iot.android.iotstarter.utils.TopicFactory;
+import com.ibm.iot.android.iotstarter.utils.MyIoTActionListener;
+import org.eclipse.paho.client.mqttv3.MqttException;
+
+import java.util.zip.Inflater;
 
 /**
  * View that contains canvas to draw upon, handles all touch Events for
@@ -40,14 +45,12 @@ public class DrawingView extends View {
 
     //drawing and canvas paint
     private Paint drawPaint, canvasPaint;
-    private int paintColor= Color.BLACK; //system color
-    private int strokeWidth = 5; //width of pencil
     private float previousX;
     private float previousY;
     //canvas
     private Canvas drawCanvas; //canvas
-    public int width = 0; //canvas width
-    public int height = 0;//canvas height
+    private int width = 0; //canvas width
+    private int height = 0;//canvas height
     //canvas bitmap
     private Bitmap canvasBitmap;
 
@@ -65,13 +68,20 @@ public class DrawingView extends View {
         drawPaint = new Paint();
         drawPaint.setDither(true);
         drawPaint.setPathEffect(new CornerPathEffect(10));
+        int paintColor = Color.BLACK;
         drawPaint.setColor(paintColor);
         drawPaint.setAntiAlias(true);
+        int strokeWidth = 5;
         drawPaint.setStrokeWidth(strokeWidth);
         drawPaint.setStyle(Paint.Style.STROKE);
         drawPaint.setStrokeJoin(Paint.Join.ROUND);
         drawPaint.setStrokeCap(Paint.Cap.ROUND);
         canvasPaint = new Paint(Paint.DITHER_FLAG);
+
+        if (this.getHeight() > 0 && this.getWidth() > 0) {
+            canvasBitmap = Bitmap.createBitmap(this.getWidth(), this.getHeight(), Bitmap.Config.ARGB_8888);
+            drawCanvas = new Canvas(canvasBitmap);
+        }
     }
 
     /**
@@ -80,6 +90,7 @@ public class DrawingView extends View {
      * @param context The context to use.
      */
     public void setContext(Context context) {
+        Log.d(TAG, "setContext()");
         this.context = context;
         app = (IoTStarterApplication) context.getApplicationContext();
     }
@@ -94,10 +105,11 @@ public class DrawingView extends View {
      */
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
+        Log.d(TAG, "onSizeChanged()");
         //view given size
         width = w;
         height = h;
-        super.onSizeChanged(w,h,oldw,oldh);
+        super.onSizeChanged(w, h, oldw, oldh);
         canvasBitmap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
         drawCanvas = new Canvas(canvasBitmap);
         if (app != null) {
@@ -107,12 +119,13 @@ public class DrawingView extends View {
 
     /**
      *
-     * @param color
+     * @param color The color to set the canvas background to
      */
     public void colorBackground(int color) {
         if (drawCanvas != null) {
             // Draw white first in case alpha value is < 255
-            drawCanvas.drawColor(Color.WHITE);
+            //drawCanvas.drawColor(Color.WHITE);
+            drawCanvas.drawColor(Color.argb(1, 58, 74, 83));
             drawCanvas.drawColor(color);
             invalidate();
         }
@@ -124,8 +137,10 @@ public class DrawingView extends View {
      */
     @Override
     protected void onDraw(Canvas canvas) {
-        drawCanvas.drawPath(drawPath, drawPaint);
-        canvas.drawBitmap(canvasBitmap, 0, 0, canvasPaint);
+        if (drawCanvas != null) {
+            drawCanvas.drawPath(drawPath, drawPaint);
+            canvas.drawBitmap(canvasBitmap, 0, 0, canvasPaint);
+        }
     }
 
     /**
@@ -151,11 +166,11 @@ public class DrawingView extends View {
             case MotionEvent.ACTION_DOWN:
                 previousX = touchX;
                 previousY = touchY;
-                drawPath.moveTo(touchX, touchY);
+                //drawPath.moveTo(touchX, touchY);
                 break;
             case MotionEvent.ACTION_MOVE:
                 publishTouchMove(touchX, touchY, false);
-                drawPath.lineTo(touchX, touchY);
+                //drawPath.lineTo(touchX, touchY);
                 break;
             case MotionEvent.ACTION_UP:
                 publishTouchMove(touchX, touchY, true);
@@ -194,7 +209,23 @@ public class DrawingView extends View {
         String messageData = MessageFactory.getTouchMessage(relativeX, relativeY, relativeDX, relativeDY, ended);
 
         Log.v(TAG, "Publishing touch message: " + messageData);
-        MqttHandler mqttHandler = MqttHandler.getInstance(context);
-        mqttHandler.publish(TopicFactory.getEventTopic(Constants.TOUCH_EVENT), messageData, false, 0);
+        try {
+            // create ActionListener to handle message published results
+            MyIoTActionListener listener = new MyIoTActionListener(context, Constants.ActionStateStatus.PUBLISH);
+            IoTClient iotClient = IoTClient.getInstance(context);
+            iotClient.publishEvent(Constants.TOUCH_EVENT, "json", messageData, 0, false, listener);
+
+            int count = app.getPublishCount();
+            app.setPublishCount(++count);
+
+            //String runningActivity = app.getCurrentRunningActivity();
+            //if (runningActivity != null && runningActivity.equals(IoTPagerFragment.class.getName())) {
+                Intent actionIntent = new Intent(Constants.APP_ID + Constants.INTENT_IOT);
+                actionIntent.putExtra(Constants.INTENT_DATA, Constants.INTENT_DATA_PUBLISHED);
+                context.sendBroadcast(actionIntent);
+            //}
+        } catch (MqttException e) {
+            Log.d(TAG, ".publishTouchMove() received exception on publishEvent()");
+        }
     }
 }

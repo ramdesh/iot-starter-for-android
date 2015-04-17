@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2014 IBM Corp.
+ * Copyright (c) 2014-2015 IBM Corp.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -18,26 +18,25 @@ package com.ibm.iot.android.iotstarter.utils;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
-
 import com.ibm.iot.android.iotstarter.IoTStarterApplication;
-import com.ibm.iot.android.iotstarter.fragments.LoginFragment;
-import org.eclipse.paho.client.mqttv3.IMqttActionListener;
+import com.ibm.iot.android.iotstarter.iot.IoTActionListener;
+import com.ibm.iot.android.iotstarter.iot.IoTClient;
 import org.eclipse.paho.client.mqttv3.IMqttToken;
+import org.eclipse.paho.client.mqttv3.MqttException;
 
 /**
  * This class implements the IMqttActionListener interface of the MQTT Client.
  * It provides the functionality for handling the success or failure of MQTT API calls.
  */
-public class ActionListener implements IMqttActionListener {
+public class MyIoTActionListener implements IoTActionListener {
 
-    private final static String TAG = ActionListener.class.getName();
+    private final static String TAG = MyIoTActionListener.class.getName();
 
-    private Context context;
-    private Constants.ActionStateStatus action;
-    private IMqttToken token;
-    private IoTStarterApplication app;
+    private final Context context;
+    private final Constants.ActionStateStatus action;
+    private final IoTStarterApplication app;
 
-    public ActionListener(Context context, Constants.ActionStateStatus action) {
+    public MyIoTActionListener(Context context, Constants.ActionStateStatus action) {
         this.context = context;
         this.action = action;
         app = (IoTStarterApplication) context.getApplicationContext();
@@ -50,7 +49,6 @@ public class ActionListener implements IMqttActionListener {
     @Override
     public void onSuccess(IMqttToken token) {
         Log.d(TAG, ".onSuccess() entered");
-        this.token = token;
         switch (action) {
             case CONNECTING:
                 handleConnectSuccess();
@@ -112,16 +110,22 @@ public class ActionListener implements IMqttActionListener {
         app.setConnected(true);
 
         if (app.getConnectionType() != Constants.ConnectionType.QUICKSTART) {
-            MqttHandler mqttHandler = MqttHandler.getInstance(context);
-            mqttHandler.subscribe(TopicFactory.getCommandTopic("+"), 0);
+            // create ActionListener to handle message published results
+            try {
+                MyIoTActionListener listener = new MyIoTActionListener(context, Constants.ActionStateStatus.PUBLISH);
+                IoTClient iotClient = IoTClient.getInstance(context);
+                iotClient.subscribeToCommand("+", "json", 0, "subscribe", listener);
+            } catch (MqttException e) {
+                Log.d(TAG, ".handleConnectSuccess() received exception on subscribeToCommand()");
+            }
         }
 
         String runningActivity = app.getCurrentRunningActivity();
-        if (runningActivity != null && runningActivity.equals(LoginFragment.class.getName())) {
+        //if (runningActivity != null && runningActivity.equals(LoginPagerFragment.class.getName())) {
             Intent actionIntent = new Intent(Constants.APP_ID + Constants.INTENT_LOGIN);
             actionIntent.putExtra(Constants.INTENT_DATA, Constants.INTENT_DATA_CONNECT);
             context.sendBroadcast(actionIntent);
-        }
+        //}
     }
 
     /**
@@ -146,12 +150,12 @@ public class ActionListener implements IMqttActionListener {
 
         app.setConnected(false);
 
-        String runningActivity = app.getCurrentRunningActivity();
-        if (runningActivity != null && runningActivity.equals(LoginFragment.class.getName())) {
-            Intent actionIntent = new Intent(Constants.APP_ID + Constants.INTENT_LOGIN);
-            actionIntent.putExtra(Constants.INTENT_DATA, Constants.INTENT_DATA_DISCONNECT);
-            context.sendBroadcast(actionIntent);
-        }
+        //String runningActivity = app.getCurrentRunningActivity();
+        //if (runningActivity != null && runningActivity.equals(LoginPagerFragment.class.getName())) {
+        //    Intent actionIntent = new Intent(Constants.APP_ID + Constants.INTENT_LOGIN);
+        //    actionIntent.putExtra(Constants.INTENT_DATA, Constants.INTENT_DATA_DISCONNECT);
+        //    context.sendBroadcast(actionIntent);
+        //}
     }
 
     /**
@@ -165,12 +169,12 @@ public class ActionListener implements IMqttActionListener {
 
         app.setConnected(false);
 
-        String runningActivity = app.getCurrentRunningActivity();
-        if (runningActivity != null && runningActivity.equals(LoginFragment.class.getName())) {
+        //String runningActivity = app.getCurrentRunningActivity();
+        //if (runningActivity != null && runningActivity.equals(LoginPagerFragment.class.getName())) {
             Intent actionIntent = new Intent(Constants.APP_ID + Constants.INTENT_LOGIN);
             actionIntent.putExtra(Constants.INTENT_DATA, Constants.INTENT_DATA_DISCONNECT);
             context.sendBroadcast(actionIntent);
-        }
+        //}
     }
 
     /**

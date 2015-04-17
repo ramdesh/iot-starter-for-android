@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--*******************************************************************************
-* Copyright (c) 2014 IBM Corp.
+* Copyright (c) 2014-2015 IBM Corp.
 *
 * All rights reserved. This program and the accompanying materials
 * are made available under the terms of the Eclipse Public License v1.0
@@ -29,22 +29,18 @@
     </style>
 
     <!-- ActionBar styles -->
-    <style name="MyActionBar"
-           parent="@android:style/Widget.Holo.ActionBar">
+    <style name="MyActionBar" parent="@android:style/Widget.Holo.ActionBar">
         <item name="android:titleTextStyle">@style/MyActionBarTitleText</item>
         <item name="android:background">@color/background_actionbar</item>
-        <!--item name="android:paddingRight">16dp</item-->
     </style>
 
     <!-- ActionBar title text -->
-    <style name="MyActionBarTitleText"
-           parent="@android:style/TextAppearance.Holo.Widget.ActionBar.Title">
+    <style name="MyActionBarTitleText" parent="@android:style/TextAppearance.Holo.Widget.ActionBar.Title">
         <item name="android:textColor">@color/actionbar_text</item>
     </style>
 
     <!-- ActionBar tabs text styles -->
-    <style name="MyActionBarTabText"
-           parent="@android:style/Widget.Holo.ActionBar.TabText">
+    <style name="MyActionBarTabText" parent="@android:style/Widget.Holo.ActionBar.TabText">
         <item name="android:textColor">@color/actionbar_text</item>
     </style>
 
@@ -57,11 +53,10 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_alignParentBottom">true</item>
         <item name="android:layout_centerHorizontal">true</item>
-        <item name="android:layout_marginBottom">10dp</item>
         <item name="android:layout_marginRight">20dp</item>
         <item name="android:layout_marginLeft">20dp</item>
         <item name="android:background">@color/background_button</item>
-        <item name="android:padding">10dp</item>
+        <item name="android:textColor">@color/white</item>
     </style>
 
     <style name="SmallButton">
@@ -69,12 +64,10 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_alignParentBottom">true</item>
         <item name="android:layout_centerHorizontal">true</item>
-        <item name="android:layout_marginBottom">5dp</item>
         <item name="android:layout_marginRight">20dp</item>
         <item name="android:layout_marginLeft">20dp</item>
         <item name="android:background">@color/transparent</item>
         <item name="android:textColor">@color/background_button</item>
-        <item name="android:padding">10dp</item>
     </style>
 
 </resources>

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2014 IBM Corp.
+ * Copyright (c) 2014-2015 IBM Corp.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -16,23 +16,17 @@
 package com.ibm.iot.android.iotstarter.utils;
 
 /**
- * Created by mprobert on 9/29/2014.
+ * Constants used by the IoT Starter application
  */
 public class Constants {
 
     public final static String APP_ID = "com.ibm.iot.android.iotstarter";
     public final static String SETTINGS = APP_ID+".Settings";
 
-    public final static String SETTINGS_MQTT_SERVER = "messaging.internetofthings.ibmcloud.com";
-    public final static String SETTINGS_MQTT_PORT = "1883";
-    public final static String SETTINGS_USERNAME = "use-token-auth";
-
     public final static String M2M = "m2m";
-    public final static String M2M_DEMO_SERVER = "messagesight.demos.ibm.com";
-    public final static String M2M_CLIENTID = "d:m2m:";
 
     public static final String QUICKSTART = "quickstart";
-    public final static String QUICKSTART_SERVER = "184.172.124.189";
+    public final static String QUICKSTART_URL = "https://quickstart.internetofthings.ibmcloud.com/#/device/";
 
     public static final String LOGIN_LABEL = "LOGIN";
     public static final String IOT_LABEL = "IOT";
@@ -43,7 +37,7 @@ public class Constants {
     }
 
     public enum ActionStateStatus {
-        CONNECTING, DISCONNECTING, SUBSCRIBE, UNSUBSCRIBE, PUBLISH
+        CONNECTING, DISCONNECTING, SUBSCRIBE, PUBLISH
     }
 
     // IoT properties
@@ -51,11 +45,6 @@ public class Constants {
     public final static String DEVICE_ID = "deviceid";
     public final static String ORGANIZATION = "organization";
     public final static String DEVICE_TYPE = "Android";
-
-    // IoT topic formats
-    public final static String EVENT_TOPIC = "iot-2/evt/";
-    public final static String COMMAND_TOPIC = "iot-2/cmd/";
-    public final static String FORMAT_TOPIC = "/fmt/json";
 
     // IoT events and commands
     public final static String ACCEL_EVENT = "accel";

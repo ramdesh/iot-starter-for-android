@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2014 IBM Corp.
+ * Copyright (c) 2014-2015 IBM Corp.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -15,11 +15,14 @@
  *******************************************************************************/
 package com.ibm.iot.android.iotstarter.fragments;
 
-import android.app.Fragment;
+import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -27,18 +30,19 @@ import android.view.MenuItem;
 import android.widget.EditText;
 import com.ibm.iot.android.iotstarter.IoTStarterApplication;
 import com.ibm.iot.android.iotstarter.R;
-import com.ibm.iot.android.iotstarter.activities.MainActivity;
+import com.ibm.iot.android.iotstarter.activities.MainPagerActivity;
+import com.ibm.iot.android.iotstarter.activities.TutorialPagerActivity;
 import com.ibm.iot.android.iotstarter.activities.ProfilesActivity;
+import com.ibm.iot.android.iotstarter.activities.WebActivity;
 
 /**
  * This class provides common properties and functions for fragment subclasses used in the application.
  */
-public class IoTStarterFragment extends Fragment {
-    protected final static String TAG = IoTStarterFragment.class.getName();
-    protected Context context;
-    protected IoTStarterApplication app;
-    protected Menu menu;
-    protected BroadcastReceiver broadcastReceiver;
+public class IoTStarterPagerFragment extends Fragment {
+    private final static String TAG = IoTStarterPagerFragment.class.getName();
+    Context context;
+    IoTStarterApplication app;
+    BroadcastReceiver broadcastReceiver;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -49,10 +53,11 @@ public class IoTStarterFragment extends Fragment {
     /**
      * Update strings in the fragment based on IoTStarterApplication values.
      */
-    protected void updateViewStrings() {
+    void updateViewStrings() {
         Log.d(TAG, ".updateViewStrings() entered");
-        int unreadCount = app.getUnreadCount();
-        ((MainActivity) getActivity()).updateBadge(getActivity().getActionBar().getTabAt(2), unreadCount);
+        // TODO: Update badge value
+        //int unreadCount = app.getUnreadCount();
+        //((MainPagerActivity) getActivity()).updateBadge(getActivity().getActionBar().getTabAt(2), unreadCount);
     }
 
     /**************************************************************************
@@ -62,22 +67,44 @@ public class IoTStarterFragment extends Fragment {
     /**
      * Switch to the IoT fragment.
      */
-    protected void openIoT() {
+    void openIoT() {
         Log.d(TAG, ".openIoT() entered");
-        getActivity().getActionBar().setSelectedNavigationItem(1);
+        ((MainPagerActivity) getActivity()).setCurrentItem(1);
     }
 
-    protected void openProfiles() {
-        Log.d(TAG, ".handleProfiles() entered");
-        Intent profilesIntent = new Intent(getActivity().getApplicationContext(), ProfilesActivity.class);
-        startActivity(profilesIntent);
+    private void openProfiles() {
+        Log.d(TAG, ".openProfiles() entered");
+        int currentAPIVersion = Build.VERSION.SDK_INT;
+        if (currentAPIVersion < Build.VERSION_CODES.HONEYCOMB) {
+            new AlertDialog.Builder(getActivity())
+                    .setTitle("Profiles Unavailable")
+                    .setMessage("Android 3.0 or greater required for profiles.")
+                    .setPositiveButton(getResources().getString(R.string.ok), new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int whichButton) {
+                        }
+                    }).show();
+        } else {
+            Intent profilesIntent = new Intent(getActivity().getApplicationContext(), ProfilesActivity.class);
+            startActivity(profilesIntent);
+        }
+    }
+
+    void openTutorial() {
+        Log.d(TAG, ".openTutorial() entered");
+        Intent tutorialIntent = new Intent(getActivity().getApplicationContext(), TutorialPagerActivity.class);
+        startActivity(tutorialIntent);
+    }
+
+    private void openWeb() {
+        Log.d(TAG, ".openWeb() entered");
+        Intent webIntent = new Intent(getActivity().getApplicationContext(), WebActivity.class);
+        startActivity(webIntent);
     }
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         Log.d(TAG, ".onCreateOptions() entered");
-        this.menu = menu;
-        getActivity().getMenuInflater().inflate(R.menu.menu, this.menu);
+        getActivity().getMenuInflater().inflate(R.menu.menu, menu);
 
         super.onCreateOptionsMenu(menu, inflater);
     }
@@ -92,7 +119,7 @@ public class IoTStarterFragment extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         Log.d(TAG, ".onOptionsItemSelected() entered");
 
-        if (LoginFragment.class.getName().equals(app.getCurrentRunningActivity())) {
+        if (((MainPagerActivity) getActivity()).getCurrentItem() == 0) {
             app.setDeviceId(((EditText) getActivity().findViewById(R.id.deviceIDValue)).getText().toString());
             app.setOrganization(((EditText) getActivity().findViewById(R.id.organizationValue)).getText().toString());
             app.setAuthToken(((EditText) getActivity().findViewById(R.id.authTokenValue)).getText().toString());
@@ -105,6 +132,12 @@ public class IoTStarterFragment extends Fragment {
                 return true;
             case R.id.action_profiles:
                 openProfiles();
+                return true;
+            case R.id.action_tutorial:
+                openTutorial();
+                return true;
+            case R.id.action_web:
+                openWeb();
                 return true;
             case R.id.action_clear_profiles:
                 app.clearProfiles();

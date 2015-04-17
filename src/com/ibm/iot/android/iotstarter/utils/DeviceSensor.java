@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2014 IBM Corp.
+ * Copyright (c) 2014-2015 IBM Corp.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -23,7 +23,8 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.util.Log;
 import com.ibm.iot.android.iotstarter.IoTStarterApplication;
-import com.ibm.iot.android.iotstarter.fragments.IoTFragment;
+import com.ibm.iot.android.iotstarter.iot.IoTClient;
+import org.eclipse.paho.client.mqttv3.MqttException;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -36,15 +37,15 @@ import java.util.TimerTask;
 public class DeviceSensor implements SensorEventListener {
     private final String TAG = DeviceSensor.class.getName();
     private static DeviceSensor instance;
-    private IoTStarterApplication app;
-    private SensorManager sensorManager;
-    private Sensor accelerometer;
-    private Sensor magnetometer;
-    private Context context;
+    private final IoTStarterApplication app;
+    private final SensorManager sensorManager;
+    private final Sensor accelerometer;
+    private final Sensor magnetometer;
+    private final Context context;
     private Timer timer;
     private boolean isEnabled = false;
 
-    public DeviceSensor(Context context) {
+    private DeviceSensor(Context context) {
         this.context = context;
         sensorManager = (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
         accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
@@ -69,7 +70,7 @@ public class DeviceSensor implements SensorEventListener {
      */
     public void enableSensor() {
         Log.i(TAG, ".enableSensor() entered");
-        if (isEnabled == false) {
+        if (!isEnabled) {
             sensorManager.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_NORMAL);
             sensorManager.registerListener(this, magnetometer, SensorManager.SENSOR_DELAY_NORMAL);
             timer = new Timer();
@@ -91,13 +92,12 @@ public class DeviceSensor implements SensorEventListener {
     }
 
     // Values used for accelerometer, magnetometer, orientation sensor data
-    float G[] = new float[3]; // gravity x,y,z
-    float M[] = new float[3]; // geomagnetic field x,y,z
-    float R[] = new float[9]; // rotation matrix
-    float I[] = new float[9]; // inclination matrix
-    float O[] = new float[3]; // orientation azimuth, pitch, roll
-    float previousO[] = new float[3]; // orientation azimuth, pitch, roll
-    float yaw;
+    private float[] G = new float[3]; // gravity x,y,z
+    private float[] M = new float[3]; // geomagnetic field x,y,z
+    private final float[] R = new float[9]; // rotation matrix
+    private final float[] I = new float[9]; // inclination matrix
+    private float[] O = new float[3]; // orientation azimuth, pitch, roll
+    private float yaw;
 
     /**
      * Callback for processing data from the registered sensors. Accelerometer and magnetometer
@@ -119,9 +119,9 @@ public class DeviceSensor implements SensorEventListener {
             M = sensorEvent.values;
         }
         if (G != null && M != null) {
-            if (sensorManager.getRotationMatrix(R, I, G, M)) {
-                previousO = O.clone();
-                O = sensorManager.getOrientation(R, O);
+            if (SensorManager.getRotationMatrix(R, I, G, M)) {
+                float[] previousO = O.clone();
+                O = SensorManager.getOrientation(R, O);
                 yaw = O[0] - previousO[0];
                 Log.v(TAG, "Orientation: azimuth: " + O[0] + " pitch: " + O[1] + " roll: " + O[2] + " yaw: " + yaw);
             }
@@ -158,24 +158,38 @@ public class DeviceSensor implements SensorEventListener {
                 lat = app.getCurrentLocation().getLatitude();
             }
             String messageData = MessageFactory.getAccelMessage(G, O, yaw, lon, lat);
-            String topic;
-            if (app.getConnectionType() == Constants.ConnectionType.QUICKSTART) {
-                topic = TopicFactory.getEventTopic(Constants.STATUS_EVENT);
-            } else {
-                topic = TopicFactory.getEventTopic(Constants.ACCEL_EVENT);
-            }
 
-            MqttHandler mqttHandler = MqttHandler.getInstance(context);
-            mqttHandler.publish(topic, messageData, false, 0);
+            try {
+                // create ActionListener to handle message published results
+                MyIoTActionListener listener = new MyIoTActionListener(context, Constants.ActionStateStatus.PUBLISH);
+                IoTClient iotClient = IoTClient.getInstance(context);
+                if (app.getConnectionType() == Constants.ConnectionType.QUICKSTART) {
+                    iotClient.publishEvent(Constants.STATUS_EVENT, "json", messageData, 0, false, listener);
+                } else {
+                    iotClient.publishEvent(Constants.ACCEL_EVENT, "json", messageData, 0, false, listener);
+                }
+
+                int count = app.getPublishCount();
+                app.setPublishCount(++count);
+
+                //String runningActivity = app.getCurrentRunningActivity();
+                //if (runningActivity != null && runningActivity.equals(IoTPagerFragment.class.getName())) {
+                    Intent actionIntent = new Intent(Constants.APP_ID + Constants.INTENT_IOT);
+                    actionIntent.putExtra(Constants.INTENT_DATA, Constants.INTENT_DATA_PUBLISHED);
+                    context.sendBroadcast(actionIntent);
+                //}
+            } catch (MqttException e) {
+                Log.d(TAG, ".run() received exception on publishEvent()");
+            }
 
             app.setAccelData(G);
 
-            String runningActivity = app.getCurrentRunningActivity();
-            if (runningActivity != null && runningActivity.equals(IoTFragment.class.getName())) {
+            //String runningActivity = app.getCurrentRunningActivity();
+            //if (runningActivity != null && runningActivity.equals(IoTPagerFragment.class.getName())) {
                 Intent actionIntent = new Intent(Constants.APP_ID + Constants.INTENT_IOT);
                 actionIntent.putExtra(Constants.INTENT_DATA, Constants.ACCEL_EVENT);
                 context.sendBroadcast(actionIntent);
-            }
+            //}
         }
     }
 }

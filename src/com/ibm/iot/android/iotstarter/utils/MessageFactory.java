@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2014 IBM Corp.
+ * Copyright (c) 2014-2015 IBM Corp.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -20,7 +20,6 @@ package com.ibm.iot.android.iotstarter.utils;
  * This class is currently unused.
  */
 public class MessageFactory {
-    private final static String TAG = MessageFactory.class.getName();
 
     /**
      * Construct a JSON formatted string accel event message
@@ -32,7 +31,7 @@ public class MessageFactory {
      * @return String containing JSON formatted message
      */
     public static String getAccelMessage(float G[], float O[], float yaw, double lon, double lat) {
-        String messageData = "{ \"d\": {" +
+        return "{ \"d\": {" +
                 "\"acceleration_x\":" + G[0] + ", " +
                 "\"acceleration_y\":" + G[1] + ", " +
                 "\"acceleration_z\":" + G[2] + ", " +
@@ -42,7 +41,6 @@ public class MessageFactory {
                 "\"lon\":" + lon + ", " +
                 "\"lat\":" + lat + " " +
                 "} }";
-        return messageData;
     }
 
     /**
@@ -51,10 +49,9 @@ public class MessageFactory {
      * @return String containing JSON formatted message
      */
     public static String getTextMessage(String text) {
-        String messageData = "{\"d\":{" +
-                "\"text\":\"" + text.toString() + "\"" +
+        return "{\"d\":{" +
+                "\"text\":\"" + text + "\"" +
                 " } }";
-        return messageData;
     }
 
     /**
@@ -74,13 +71,12 @@ public class MessageFactory {
             endString = " } }";
         }
 
-        String messageData = "{ \"d\": { " +
+        return "{ \"d\": { " +
                 "\"screenX\":" + x + ", " +
                 "\"screenY\":" + y + ", " +
                 "\"deltaX\":" + dX + ", " +
                 "\"deltaY\":" + dY +
                 endString;
-        return messageData;
     }
 
 }

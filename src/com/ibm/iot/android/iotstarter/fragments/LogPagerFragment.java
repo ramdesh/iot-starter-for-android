@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2014 IBM Corp.
+ * Copyright (c) 2014-2015 IBM Corp.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -16,10 +16,10 @@
 package com.ibm.iot.android.iotstarter.fragments;
 
 import android.app.AlertDialog;
-import android.app.ListFragment;
 import android.content.*;
-import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.app.ListFragment;
 import android.util.Log;
 import android.view.*;
 import android.widget.ArrayAdapter;
@@ -27,24 +27,27 @@ import android.widget.ListView;
 import com.ibm.iot.android.iotstarter.IoTStarterApplication;
 import com.ibm.iot.android.iotstarter.R;
 import com.ibm.iot.android.iotstarter.activities.ProfilesActivity;
+import com.ibm.iot.android.iotstarter.activities.TutorialPagerActivity;
+import com.ibm.iot.android.iotstarter.activities.WebActivity;
 import com.ibm.iot.android.iotstarter.utils.Constants;
 
 /**
  * The Log fragment displays text command messages that have been received by the application.
  */
-public class LogFragment extends ListFragment {
-    private final static String TAG = LogFragment.class.getName();
-    protected Context context;
-    protected IoTStarterApplication app;
-    protected Menu menu;
-    protected BroadcastReceiver broadcastReceiver;
+public class LogPagerFragment extends ListFragment {
+    private final static String TAG = LogPagerFragment.class.getName();
+    private IoTStarterApplication app;
+    private BroadcastReceiver broadcastReceiver;
 
-    protected ListView listView;
-    protected ArrayAdapter<String> listAdapter;
+    private ArrayAdapter<String> listAdapter;
 
     /**************************************************************************
      * Fragment functions for establishing the fragment
      **************************************************************************/
+
+    public static LogPagerFragment newInstance() {
+        return new LogPagerFragment();
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -65,15 +68,15 @@ public class LogFragment extends ListFragment {
         Log.d(TAG, ".onResume() entered");
 
         super.onResume();
-        context = getActivity().getApplicationContext();
+        Context context = getActivity().getApplicationContext();
 
-        listView = (ListView)getActivity().findViewById(android.R.id.list);
+        ListView listView = (ListView) getActivity().findViewById(android.R.id.list);
 
         app = (IoTStarterApplication) getActivity().getApplication();
         app.setCurrentRunningActivity(TAG);
         app.setUnreadCount(0);
 
-        listAdapter = new ArrayAdapter<String>(this.context, R.layout.list_item, app.getMessageLog());
+        listAdapter = new ArrayAdapter<String>(context, R.layout.list_item, app.getMessageLog());
         listView.setAdapter(listAdapter);
 
         if (broadcastReceiver == null) {
@@ -91,8 +94,8 @@ public class LogFragment extends ListFragment {
         getActivity().getApplicationContext().registerReceiver(broadcastReceiver,
                 new IntentFilter(Constants.APP_ID + Constants.INTENT_LOG));
 
-        // Set color to black incase it somehow was leftover from iot fragment?
-        getView().setBackgroundColor(Color.BLACK);
+        // Set color to black in case it somehow was leftover from iot fragment?
+        getView().setBackgroundColor(getResources().getColor(R.color.background_main));
 
         // initialise
         initializeLogActivity();
@@ -146,17 +149,39 @@ public class LogFragment extends ListFragment {
      * Functions to handle the iot_menu bar
      **************************************************************************/
 
-    protected void openProfiles() {
-        Log.d(TAG, ".handleProfiles() entered");
-        Intent profilesIntent = new Intent(getActivity().getApplicationContext(), ProfilesActivity.class);
-        startActivity(profilesIntent);
+    private void openProfiles() {
+        Log.d(TAG, ".openProfiles() entered");
+        int currentAPIVersion = Build.VERSION.SDK_INT;
+        if (currentAPIVersion < Build.VERSION_CODES.HONEYCOMB) {
+            new AlertDialog.Builder(getActivity())
+                    .setTitle("Profiles Unavailable")
+                    .setMessage("Android 3.0 or greater required for profiles.")
+                    .setPositiveButton(getResources().getString(R.string.ok), new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int whichButton) {
+                        }
+                    }).show();
+        } else {
+            Intent profilesIntent = new Intent(getActivity().getApplicationContext(), ProfilesActivity.class);
+            startActivity(profilesIntent);
+        }
+    }
+
+    void openTutorial() {
+        Log.d(TAG, ".openTutorial() entered");
+        Intent tutorialIntent = new Intent(getActivity().getApplicationContext(), TutorialPagerActivity.class);
+        startActivity(tutorialIntent);
+    }
+
+    private void openWeb() {
+        Log.d(TAG, ".openWeb() entered");
+        Intent webIntent = new Intent(getActivity().getApplicationContext(), WebActivity.class);
+        startActivity(webIntent);
     }
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         Log.d(TAG, ".onCreateOptions() entered");
-        this.menu = menu;
-        getActivity().getMenuInflater().inflate(R.menu.menu, this.menu);
+        getActivity().getMenuInflater().inflate(R.menu.menu, menu);
 
         super.onCreateOptionsMenu(menu, inflater);
     }
@@ -175,6 +200,12 @@ public class LogFragment extends ListFragment {
                 if (!ProfilesActivity.class.getName().equals(app.getCurrentRunningActivity())) {
                     openProfiles();
                 }
+                return true;
+            case R.id.action_tutorial:
+                openTutorial();
+                return true;
+            case R.id.action_web:
+                openWeb();
                 return true;
             case R.id.action_accel:
                 app.toggleAccel();

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
 /*******************************************************************************
- * Copyright (c) 2014 IBM Corp.
+ * Copyright (c) 2014-2015 IBM Corp.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -20,7 +20,7 @@
           package="com.ibm.iot.android.iotstarter"
           android:versionCode="1"
           android:versionName="2.0.0">
-    <uses-sdk android:minSdkVersion="13"/>
+    <uses-sdk android:minSdkVersion="9" android:targetSdkVersion="21"/>
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
@@ -28,18 +28,23 @@
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.FLASHLIGHT" />
     <uses-permission android:name="android.permission.CAMERA" />
-	<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <application
-        android:label="@string/app_name"
-        android:icon="@drawable/ic_icon"
-        android:logo="@drawable/ic_logo"
-        android:name="com.ibm.iot.android.iotstarter.IoTStarterApplication"
-        android:theme="@style/IoTStarterTheme">
-        <activity
-            android:name="com.ibm.iot.android.iotstarter.activities.MainActivity"
             android:label="@string/app_name"
-            android:launchMode="singleTask">
+            android:icon="@drawable/ic_icon"
+            android:logo="@drawable/ic_logo"
+            android:name="com.ibm.iot.android.iotstarter.IoTStarterApplication"
+            android:theme="@style/IoTStarterTheme">
+
+        <activity
+                android:name=".activities.TutorialPagerActivity"
+                android:launchMode="standard">
+        </activity>
+
+        <activity
+                android:name=".activities.MainPagerActivity"
+                android:launchMode="singleTask">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
@@ -48,8 +53,17 @@
 
         <activity
                 android:name="com.ibm.iot.android.iotstarter.activities.ProfilesActivity"
-                android:launchMode="singleTask">
+                android:launchMode="standard">
         </activity>
+
+        <activity
+                android:name="com.ibm.iot.android.iotstarter.activities.WebActivity"
+                android:launchMode="standard">
+        </activity>
+
+        <meta-data
+                android:name="com.google.android.gms.version"
+                android:value="@integer/google_play_services_version" />
 
         <!-- Mqtt Service -->
         <service android:name="org.eclipse.paho.android.service.MqttService" />

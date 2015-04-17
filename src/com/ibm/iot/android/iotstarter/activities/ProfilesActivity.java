@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2014 IBM Corp.
+ * Copyright (c) 2014-2015 IBM Corp.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -25,10 +25,11 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.*;
+
 import com.ibm.iot.android.iotstarter.IoTStarterApplication;
 import com.ibm.iot.android.iotstarter.R;
 import com.ibm.iot.android.iotstarter.utils.Constants;
-import com.ibm.iot.android.iotstarter.utils.IoTProfile;
+import com.ibm.iot.android.iotstarter.iot.IoTDevice;
 
 import java.util.ArrayList;
 
@@ -37,12 +38,12 @@ import java.util.ArrayList;
  */
 public class ProfilesActivity extends Activity {
     private final static String TAG = ProfilesActivity.class.getName();
-    protected Context context;
-    protected IoTStarterApplication app;
-    protected BroadcastReceiver broadcastReceiver;
+    private Context context;
+    private IoTStarterApplication app;
+    private BroadcastReceiver broadcastReceiver;
 
-    protected ListView listView;
-    protected ArrayAdapter<String> listAdapter;
+    private ListView listView;
+    private ArrayAdapter<String> listAdapter;
 
     /**************************************************************************
      * Activity functions for establishing the activity
@@ -140,9 +141,9 @@ public class ProfilesActivity extends Activity {
     private void handleSelection(String profileName) {
         Log.d(TAG, ".handleSelection() entered");
 
-        ArrayList<IoTProfile> profiles = (ArrayList<IoTProfile>) app.getProfiles();
-        for (IoTProfile profile : profiles) {
-            if (profile.getProfileName().equals(profileName)) {
+        ArrayList<IoTDevice> profiles = (ArrayList<IoTDevice>) app.getProfiles();
+        for (IoTDevice profile : profiles) {
+            if (profile.getDeviceName().equals(profileName)) {
                 app.setProfile(profile);
                 app.setOrganization(profile.getOrganization());
                 app.setDeviceId(profile.getDeviceID());
@@ -168,11 +169,11 @@ public class ProfilesActivity extends Activity {
                 .setPositiveButton(getResources().getString(R.string.save_dialog_ok), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
                         Editable value = input.getText();
-                        IoTProfile profile = new IoTProfile(value.toString(), app.getOrganization(), app.getDeviceId(), app.getAuthToken());
+                        IoTDevice profile = new IoTDevice(value.toString(), app.getOrganization(), "Android", app.getDeviceId(), app.getAuthToken());
 
                         // Check if profile name already exists.
-                        if (app.getProfileNames().contains(profile.getProfileName())) {
-                            final IoTProfile newProfile = profile;
+                        if (app.getProfileNames().contains(profile.getDeviceName())) {
+                            final IoTDevice newProfile = profile;
                             new AlertDialog.Builder(ProfilesActivity.this)
                                     .setTitle(getResources().getString(R.string.profile_exists_title))
                                     .setMessage(getResources().getString(R.string.profile_exists_text))
@@ -229,6 +230,24 @@ public class ProfilesActivity extends Activity {
         return true;
     }
 
+    void openTutorial() {
+        Log.d(TAG, ".openTutorial() entered");
+        Intent tutorialIntent = new Intent(getApplicationContext(), TutorialPagerActivity.class);
+        startActivity(tutorialIntent);
+    }
+
+    void openWeb() {
+        Log.d(TAG, ".openWeb() entered");
+        Intent webIntent = new Intent(getApplicationContext(), WebActivity.class);
+        startActivity(webIntent);
+    }
+
+    private void openHome() {
+        Log.d(TAG, ".openHome() entered");
+        Intent homeIntent = new Intent(getApplicationContext(), MainPagerActivity.class);
+        startActivity(homeIntent);
+    }
+
     /**
      * Process the selected iot_menu item.
      *
@@ -251,6 +270,15 @@ public class ProfilesActivity extends Activity {
             case R.id.clear:
                 app.setUnreadCount(0);
                 app.getMessageLog().clear();
+                return true;
+            case R.id.action_home:
+                openHome();
+                return true;
+            case R.id.action_tutorial:
+                openTutorial();
+                return true;
+            case R.id.action_web:
+                openWeb();
                 return true;
             default:
                 if (item.getTitle().equals(getResources().getString(R.string.app_name))) {

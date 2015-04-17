@@ -1,11 +1,12 @@
 #IoT Starter for Android
-IoT Starter is a demo application for interacting with the IBM Internet of Things (IoT) Foundation.
+IoT Starter is a demo application for interacting with the IBM Internet of Things Foundation (IoTF).
 The application turns your mobile device into a sensor that publishes and receives data to and from the cloud using the MQTT protocol.
 
 For the iOS version, refer to [IoT Starter for iOS](https://github.com/ibm-messaging/iot-starter-for-ios)
+For a detailed overview of the application, refer to [IoT Starter](http://m2m.demos.ibm.com/iotstarter.html).
 
 ##Short Description
-IoT Foundation is a cloud-hosted service to simplify managing all of your IoT devices.
+IoTF is a cloud-hosted service to simplify managing all of your IoT devices.
 It provides functionality for creating recipes which determine how devices communicate with each other.
 This application demonstrates using an Android device as one of those IoT devices, and provides a variety of events and commands that it can publish or receive data to and from.
 
@@ -13,7 +14,7 @@ IoT events and commands are user defined values used to differentiate the data t
 
 The application can publish data to the following IoT event topics:
 - Accelerometer (accel event)
-- Touchmove (touchmove event)
+- Touchmove (touchmove event) *** Currently broken ***
 - Text (text event)
 
 The application can receive data on the following IoT command topics:
@@ -22,7 +23,7 @@ The application can receive data on the following IoT command topics:
 - Text (text command)
 - Alert (alert command)
 
-For more information on IoT Foundation, refer to https://internetofthings.ibmcloud.com/#/
+For more information on Internet of Things Foundation, refer to https://internetofthings.ibmcloud.com/#/
 
 ##How it works
 A device that is registered with IoT Foundation may publish and subscribe to data that is presented as either an event or command using the MQTT protocol.
@@ -46,7 +47,7 @@ The IoT Starter application can be used in 2 ways.
 ### 1. Connect to IoT Quickstart
 In order to connect to IoT Quickstart, all you need to do is specify 'quickstart' as the organization and enter a valid device id. The Auth Token field can be left blank. The device-id is a 12 hexadecimal character MAC address in lower case, without delimiting characters. For example, a36d7c91bf9e. For more details, refer to the [Connect to Quickstart recipe](https://developer.ibm.com/iot/recipes/improvise-connect-quickstart/).
 
-Once the app is connected, you can see the data visualized by going to [IoT Quickstart]() and entering the same device-id in the MAC address field.
+Once the app is connected, you can see the data visualized by going to the application menu and pressing 'Open Quickstart'.
 
 ### 2. Connect to an IoT organization as a registered device
 In order to try the application as a registered device, you must have an IoT Foundation organization. This can be done by signing up for an IBM Bluemix trial and creating an instance of the IBM Internet of Things Foundation service. This will create an IoT organization where you can register devices. Next, you must register your device with your organization. When registering your device, create a new device type called `Android` (case sensitive). More detailed instructions on registering devices can be found at [IBM Internet of Things Foundation](https://internetofthings.ibmcloud.com/#/).
@@ -74,6 +75,7 @@ Required:
 ##Notes
 In order to really see this demo do something, you must have an application to consume its data and publish data back
 to the application. For examples, refer to the [IoT Starter demo](http://m2m.demos.ibm.com/iotstarter.html).
+See DOC.txt for details on application permissions, API level restrictions, and other design details.
 
 ##Resources
 - [IoT Starter](http://m2m.demos.ibm.com/iotstarter.html)

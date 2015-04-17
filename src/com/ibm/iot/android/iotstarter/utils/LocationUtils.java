@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2014 IBM Corp.
+ * Copyright (c) 2014-2015 IBM Corp.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -32,13 +32,11 @@ public class LocationUtils implements LocationListener {
     private final static String TAG = LocationUtils.class.getName();
 
     private static LocationUtils instance;
-    private IoTStarterApplication app;
-    private LocationManager locationManager;
-    private Context context;
-    private Criteria criteria;
+    private final IoTStarterApplication app;
+    private final LocationManager locationManager;
+    private final Criteria criteria;
 
     private LocationUtils(Context context) {
-        this.context = context;
         this.locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
         this.criteria = getCriteria();
         this.app = (IoTStarterApplication) context.getApplicationContext();
@@ -59,7 +57,7 @@ public class LocationUtils implements LocationListener {
 
         // Check if location provider is enabled
         String locationProvider = LocationManager.NETWORK_PROVIDER;
-        if (locationManager.isProviderEnabled(locationProvider) == false) {
+        if (!locationManager.isProviderEnabled(locationProvider)) {
             Log.d(TAG, "Location provider not enabled.");
             app.setCurrentLocation(null);
             return;
@@ -100,7 +98,6 @@ public class LocationUtils implements LocationListener {
     @Override
     public void onProviderEnabled(String provider) {
         Log.d(TAG, ".onProviderEnabled() entered");
-
     }
 
     @Override
@@ -114,7 +111,7 @@ public class LocationUtils implements LocationListener {
      *
      * @return criteria constructed for the listener
      */
-    public Criteria getCriteria() {
+    private Criteria getCriteria() {
         Criteria criteria = new Criteria();
         criteria.setPowerRequirement(Criteria.POWER_LOW);
         criteria.setAccuracy(Criteria.ACCURACY_FINE);

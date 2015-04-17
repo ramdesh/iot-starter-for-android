@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2014 IBM Corp.
+ * Copyright (c) 2014-2015 IBM Corp.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -16,17 +16,17 @@
 package com.ibm.iot.android.iotstarter;
 
 import android.app.Application;
-
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.hardware.Camera;
 import android.location.Location;
+import android.os.Build;
 import android.util.Log;
-
+import com.ibm.iot.android.iotstarter.iot.IoTDevice;
 import com.ibm.iot.android.iotstarter.utils.Constants;
 import com.ibm.iot.android.iotstarter.utils.DeviceSensor;
-import com.ibm.iot.android.iotstarter.utils.IoTProfile;
+import com.ibm.iot.android.iotstarter.utils.MyIoTCallbacks;
 
 import java.util.*;
 
@@ -37,16 +37,22 @@ import java.util.*;
 public class IoTStarterApplication extends Application {
     private final static String TAG = IoTStarterApplication.class.getName();
 
+    private boolean tutorialShown = false;
+
     // Current activity of the application, updated whenever activity is changed
     private String currentRunningActivity;
 
     // Values needed for connecting to IoT
     private String organization;
+    private String deviceType;
     private String deviceId;
     private String authToken;
     private Constants.ConnectionType connectionType;
+    private boolean useSSL = true;
 
     private SharedPreferences settings;
+
+    private MyIoTCallbacks myIoTCallbacks;
 
     // Application state variables
     private boolean connected = false;
@@ -54,7 +60,7 @@ public class IoTStarterApplication extends Application {
     private int receiveCount = 0;
     private int unreadCount = 0;
 
-    private int color = Color.WHITE;
+    private int color = Color.argb(1, 58, 74, 83);
     private boolean isCameraOn = false;
     private float[] accelData;
     private boolean accelEnabled = true;
@@ -64,11 +70,10 @@ public class IoTStarterApplication extends Application {
     private Camera camera;
 
     // Message log for log activity
-    private ArrayList<String> messageLog = new ArrayList<String>();
+    private final ArrayList<String> messageLog = new ArrayList<String>();
 
-    private IoTProfile profile;
-    private List<IoTProfile> profiles = new ArrayList<IoTProfile>();
-    private ArrayList<String> profileNames = new ArrayList<String>();
+    private final List<IoTDevice> profiles = new ArrayList<IoTDevice>();
+    private final ArrayList<String> profileNames = new ArrayList<String>();
 
     /**
      * Called when the application is created. Initializes the application.
@@ -79,6 +84,33 @@ public class IoTStarterApplication extends Application {
         super.onCreate();
 
         settings = getSharedPreferences(Constants.SETTINGS, 0);
+
+        /*
+         * Testing...
+         */
+        //SharedPreferences.Editor editor = settings.edit();
+        /* Start app with 0 saved settings */
+        //editor.clear();
+        /* Start app with tutorial never been seen */
+        //editor.remove("TUTORIAL_SHOWN");
+        /* Start app with original settings values */
+        //editor.putString("organization", "9cuh6o");
+        //editor.putString("deviceid", "ABABABABABAB");
+        //editor.putString("authtoken", "Q*!tK)b0P7aDX4n0Za");
+        /* Start app without 'DeviceType' saved */
+        //Set<String> props = new HashSet<String>();
+        //props.add("name:testiot");
+        //props.add("deviceId:ABABABABABAB");
+        //props.add("org:9cuh6o");
+        //props.add("authToken:Q*!tK)b0P7aDX4n0Za");
+        //editor.putStringSet("testiot", props);
+        //editor.commit();
+
+        if (settings.getString("TUTORIAL_SHOWN", null) != null) {
+            tutorialShown = true;
+        }
+
+        myIoTCallbacks = MyIoTCallbacks.getInstance(this);
 
         loadProfiles();
     }
@@ -91,70 +123,80 @@ public class IoTStarterApplication extends Application {
         Log.d(TAG, "organization not null. compat profile setup");
         // If old stored property settings exist, use them to create a new default profile.
         String organization = settings.getString(Constants.ORGANIZATION, null);
+        String deviceType = Constants.DEVICE_TYPE;
         String deviceId = settings.getString(Constants.DEVICE_ID, null);
         String authToken = settings.getString(Constants.AUTH_TOKEN, null);
-        IoTProfile newProfile = new IoTProfile("default", organization, deviceId, authToken);
-        this.profiles.add(newProfile);
+        IoTDevice newDevice = new IoTDevice("default", organization, deviceType, deviceId, authToken);
+        this.profiles.add(newDevice);
         this.profileNames.add("default");
 
-        // Put the new profile into the store settings and remove the old stored properties.
-        Set<String> defaultProfile = newProfile.convertToSet();
+        int currentAPIVersion = Build.VERSION.SDK_INT;
+        if (currentAPIVersion >= Build.VERSION_CODES.HONEYCOMB) {
+            // Put the new profile into the store settings and remove the old stored properties.
+            Set<String> defaultProfile = newDevice.convertToSet();
 
-        SharedPreferences.Editor editor = settings.edit();
-        editor.putStringSet(newProfile.getProfileName(), defaultProfile);
-        editor.remove(Constants.ORGANIZATION);
-        editor.remove(Constants.DEVICE_ID);
-        editor.remove(Constants.AUTH_TOKEN);
-        editor.commit();
+            SharedPreferences.Editor editor = settings.edit();
+            editor.putStringSet(newDevice.getDeviceName(), defaultProfile);
+            editor.remove(Constants.ORGANIZATION);
+            editor.remove(Constants.DEVICE_ID);
+            editor.remove(Constants.AUTH_TOKEN);
+            //editor.apply();
+            editor.commit();
+        }
 
-        this.setProfile(newProfile);
-        this.setOrganization(newProfile.getOrganization());
-        this.setDeviceId(newProfile.getDeviceID());
-        this.setAuthToken(newProfile.getAuthorizationToken());
-
-        return;
+        this.setProfile(newDevice);
+        this.setOrganization(newDevice.getOrganization());
+        this.setDeviceType(newDevice.getDeviceType());
+        this.setDeviceId(newDevice.getDeviceID());
+        this.setAuthToken(newDevice.getAuthorizationToken());
     }
 
     /**
      * Load existing profiles from application stored settings.
      */
     private void loadProfiles() {
-        // Compatability
+        // Compatibility
         if (settings.getString(Constants.ORGANIZATION, null) != null) {
             createNewDefaultProfile();
             return;
         }
 
-        String profileName;
-        if ((profileName = settings.getString("iot:selectedprofile", null)) == null) {
-            profileName = "";
-        }
+        int currentAPIVersion = Build.VERSION.SDK_INT;
+        if (currentAPIVersion >= Build.VERSION_CODES.HONEYCOMB) {
+            String profileName;
+            if ((profileName = settings.getString("iot:selectedprofile", null)) == null) {
+                profileName = "";
+                Log.d(TAG, "Last selected profile: " + profileName);
+            }
 
-        Map<String,?> profileList = settings.getAll();
-        if (profileList != null) {
-            for (String key : profileList.keySet()) {
-                if (key.equals("iot:selectedprofile")) {
-                    continue;
-                }
-                Set<String> profile;// = new HashSet<String>();
-                try {
-                    // If the stored property is a Set<String> type, parse the profile and add it to the list of
-                    // profiles.
-                    if ((profile = settings.getStringSet(key, null)) != null) {
-                        Log.d(TAG, "profile name: " + key);
-                        IoTProfile newProfile = new IoTProfile(profile);
-                        this.profiles.add(newProfile);
-                        this.profileNames.add(newProfile.getProfileName());
-
-                        if (newProfile.getProfileName().equals(profileName)) {
-                            this.setProfile(newProfile);
-                            this.setOrganization(newProfile.getOrganization());
-                            this.setDeviceId(newProfile.getDeviceID());
-                            this.setAuthToken(newProfile.getAuthorizationToken());
-                        }
+            Map<String, ?> profileList = settings.getAll();
+            if (profileList != null) {
+                for (String key : profileList.keySet()) {
+                    if (key.equals("iot:selectedprofile") || key.equals("TUTORIAL_SHOWN")) {
+                        continue;
                     }
-                } catch (Exception e) {
-                    continue;
+                    Set<String> profile;
+                    try {
+                        // If the stored property is a Set<String> type, parse the profile and add it to the list of
+                        // profiles.
+                        if ((profile = settings.getStringSet(key, null)) != null) {
+                            Log.d(TAG, "profile name: " + key);
+                            IoTDevice newProfile = new IoTDevice(profile);
+                            this.profiles.add(newProfile);
+                            this.profileNames.add(newProfile.getDeviceName());
+
+                            if (newProfile.getDeviceName().equals(profileName)) {
+                                this.setProfile(newProfile);
+                                this.setOrganization(newProfile.getOrganization());
+                                this.setDeviceType(newProfile.getDeviceType());
+                                this.setDeviceId(newProfile.getDeviceID());
+                                this.setAuthToken(newProfile.getAuthorizationToken());
+                            }
+                        }
+                    } catch (Exception e) {
+                        Log.d(TAG, ".loadProfiles() received exception:");
+                        e.printStackTrace();
+                    }
                 }
             }
         }
@@ -171,7 +213,7 @@ public class IoTStarterApplication extends Application {
                 deviceSensor = DeviceSensor.getInstance(this);
             }
             deviceSensor.enableSensor();
-        } else if (connected && !accelEnabled) {
+        } else if (connected) {
             // Device Sensor was previously enabled, and the device is connected, so disable the sensor
             if (deviceSensor != null) {
                 deviceSensor.disableSensor();
@@ -207,17 +249,21 @@ public class IoTStarterApplication extends Application {
      * Overwrite an existing profile in the stored application settings.
      * @param newProfile The profile to save.
      */
-    public void overwriteProfile(IoTProfile newProfile) {
-        // Put the new profile into the store settings and remove the old stored properties.
-        Set<String> profileSet = newProfile.convertToSet();
+    public void overwriteProfile(IoTDevice newProfile) {
+        int currentAPIVersion = Build.VERSION.SDK_INT;
+        if (currentAPIVersion >= Build.VERSION_CODES.HONEYCOMB) {
+            // Put the new profile into the store settings and remove the old stored properties.
+            Set<String> profileSet = newProfile.convertToSet();
 
-        SharedPreferences.Editor editor = settings.edit();
-        editor.remove(newProfile.getProfileName());
-        editor.putStringSet(newProfile.getProfileName(), profileSet);
-        editor.commit();
+            SharedPreferences.Editor editor = settings.edit();
+            editor.remove(newProfile.getDeviceName());
+            editor.putStringSet(newProfile.getDeviceName(), profileSet);
+            //editor.apply();
+            editor.commit();
+        }
 
-        for (IoTProfile existingProfile : profiles) {
-            if (existingProfile.getProfileName().equals(newProfile.getProfileName())) {
+        for (IoTDevice existingProfile : profiles) {
+            if (existingProfile.getDeviceName().equals(newProfile.getDeviceName())) {
                 profiles.remove(existingProfile);
                 break;
             }
@@ -228,15 +274,19 @@ public class IoTStarterApplication extends Application {
      * Save the profile to the application stored settings.
      * @param profile The profile to save.
      */
-    public void saveProfile(IoTProfile profile) {
-        // Put the new profile into the store settings and remove the old stored properties.
-        Set<String> profileSet = profile.convertToSet();
+    public void saveProfile(IoTDevice profile) {
+        int currentAPIVersion = Build.VERSION.SDK_INT;
+        if (currentAPIVersion >= Build.VERSION_CODES.HONEYCOMB) {
+            // Put the new profile into the store settings and remove the old stored properties.
+            Set<String> profileSet = profile.convertToSet();
 
-        SharedPreferences.Editor editor = settings.edit();
-        editor.putStringSet(profile.getProfileName(), profileSet);
-        editor.commit();
+            SharedPreferences.Editor editor = settings.edit();
+            editor.putStringSet(profile.getDeviceName(), profileSet);
+            //editor.apply();
+            editor.commit();
+        }
         this.profiles.add(profile);
-        this.profileNames.add(profile.getProfileName());
+        this.profileNames.add(profile.getDeviceName());
     }
 
     /**
@@ -245,10 +295,13 @@ public class IoTStarterApplication extends Application {
     public void clearProfiles() {
         this.profiles.clear();
         this.profileNames.clear();
-
-        SharedPreferences.Editor editor = settings.edit();
-        editor.clear();
-        editor.commit();
+        int currentAPIVersion = Build.VERSION.SDK_INT;
+        if (currentAPIVersion >= Build.VERSION_CODES.HONEYCOMB) {
+            SharedPreferences.Editor editor = settings.edit();
+            editor.clear();
+            //editor.apply();
+            editor.commit();
+        }
     }
 
     // Getters and Setters
@@ -328,7 +381,7 @@ public class IoTStarterApplication extends Application {
         this.color = color;
     }
 
-    public float[] getAccelData() { return accelData; };
+    public float[] getAccelData() { return accelData; }
 
     public void setAccelData(float[] accelData) {
         this.accelData = accelData.clone();
@@ -342,7 +395,7 @@ public class IoTStarterApplication extends Application {
         return accelEnabled;
     }
 
-    public void setAccelEnabled(boolean accelEnabled) {
+    private void setAccelEnabled(boolean accelEnabled) {
         this.accelEnabled = accelEnabled;
     }
 
@@ -362,22 +415,52 @@ public class IoTStarterApplication extends Application {
         this.currentLocation = currentLocation;
     }
 
-    public IoTProfile getProfile() {
-        return profile;
+    public void setProfile(IoTDevice profile) {
+        int currentAPIVersion = Build.VERSION.SDK_INT;
+        if (currentAPIVersion >= Build.VERSION_CODES.HONEYCOMB) {
+            SharedPreferences.Editor editor = settings.edit();
+            editor.putString("iot:selectedprofile", profile.getDeviceName());
+            //editor.apply();
+            editor.commit();
+        }
     }
 
-    public void setProfile(IoTProfile profile) {
-        this.profile = profile;
-        SharedPreferences.Editor editor = settings.edit();
-        editor.putString("iot:selectedprofile", profile.getProfileName());
-        editor.commit();
-    }
-
-    public List<IoTProfile> getProfiles() {
+    public List<IoTDevice> getProfiles() {
         return profiles;
     }
 
     public ArrayList<String> getProfileNames() {
         return profileNames;
+    }
+
+    public MyIoTCallbacks getMyIoTCallbacks() {
+        return myIoTCallbacks;
+    }
+
+    public void setDeviceType(String deviceType) {
+        this.deviceType = deviceType;
+    }
+
+    public String getDeviceType() {
+        return deviceType;
+    }
+
+    public boolean isUseSSL() {
+        return useSSL;
+    }
+
+    public void setUseSSL(boolean useSSL) {
+        this.useSSL = useSSL;
+    }
+
+    public boolean isTutorialShown() {
+        return tutorialShown;
+    }
+
+    public void setTutorialShown(boolean tutorialShown) {
+        this.tutorialShown = tutorialShown;
+        SharedPreferences.Editor editor = settings.edit();
+        editor.putString("TUTORIAL_SHOWN", "yes");
+        editor.commit();
     }
 }
