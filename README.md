@@ -70,7 +70,8 @@ Required:
 1. To install the application, download this project and import it into an IDE of your choice (IntelliJ, Android Studio, Eclipse, etc).
 2. Set the project to use your Android SDK installation.
 3. Set the project libraries to include the Eclipse Paho jar files in the libs directory.
-4. Run the application.
+4. Set the project to include module dependencies on google-play-services and appcompat libraries from the Android SDK.
+5. Run the application.
 
 ##Notes
 In order to really see this demo do something, you must have an application to consume its data and publish data back

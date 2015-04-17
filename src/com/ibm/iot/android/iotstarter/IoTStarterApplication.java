@@ -85,24 +85,21 @@ public class IoTStarterApplication extends Application {
 
         settings = getSharedPreferences(Constants.SETTINGS, 0);
 
-        /*
-         * Testing...
-         */
         //SharedPreferences.Editor editor = settings.edit();
         /* Start app with 0 saved settings */
         //editor.clear();
         /* Start app with tutorial never been seen */
         //editor.remove("TUTORIAL_SHOWN");
         /* Start app with original settings values */
-        //editor.putString("organization", "9cuh6o");
-        //editor.putString("deviceid", "ABABABABABAB");
-        //editor.putString("authtoken", "Q*!tK)b0P7aDX4n0Za");
+        //editor.putString("organization", "");
+        //editor.putString("deviceid", "");
+        //editor.putString("authtoken", "");
         /* Start app without 'DeviceType' saved */
         //Set<String> props = new HashSet<String>();
-        //props.add("name:testiot");
-        //props.add("deviceId:ABABABABABAB");
-        //props.add("org:9cuh6o");
-        //props.add("authToken:Q*!tK)b0P7aDX4n0Za");
+        //props.add("name:");
+        //props.add("deviceId:");
+        //props.add("org:");
+        //props.add("authToken:");
         //editor.putStringSet("testiot", props);
         //editor.commit();
 
