@@ -79,7 +79,16 @@ Node-RED is a tool used to create visual flows for the internet of things. When 
 types of nodes is an IBM IoT node, which can be used to publish and subscribe to the IBM Internet of Things Foundation.
 
 ##Extending the application
-In order to add new capabilities to the application, ...
+The application can be extended to publish and receive your own events and commands beyond the ones that are already supported.
+
+###Adding support for a new event type
+Event type messages are messages that the application publishes to IoTF. To add support for a new event type, define a new
+getXYZMessage(...) method in utils/MessageFactory.java. Then find a suitable place in the application to create the message and publish the
+message with IoTClient publishEvent(...).
+
+###Adding support for a new command type
+Command type messages are messages that the application receives which cause it to do something. To add support for a new command type,
+define a new command type in utils/Constants.java and add a new case for the command to MessageConductor steerMessage(...).
 
 ##Resources
 - [IoT Starter](http://m2m.demos.ibm.com/iotstarter.html)
