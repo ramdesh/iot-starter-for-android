@@ -70,9 +70,9 @@ Required:
 - An Android SDK installation
 
 ##Installation
-1. To install the application, download this project and open it in Android Studio with "Open an existing Android Studio project".
-2. Set the project to use your Android SDK installation.
-3. Set the project libraries to include the Eclipse Paho jar files in the libs directory.
+1. `git clone https://github.com/ibm-messaging/iot-starter-for-android.git`
+2. Launch Android Studio and select "Open an Existing Android Studio Project".
+3. Navigate to your `iot-starter-for-android` folder and open the project.
 4. Run the application.
 
 ##Notes
