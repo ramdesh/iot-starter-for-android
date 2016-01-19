@@ -36,13 +36,19 @@ import com.ibm.iot.android.iotstarter.utils.Constants;
 public class WebActivity extends Activity {
     private static final String TAG = WebActivity.class.getName();
 
+    WebView wv;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.webview);
 
-        WebView wv = (WebView) findViewById(R.id.webPage);
+        if (savedInstanceState != null) {
+            ((WebView)findViewById(R.id.webPage)).restoreState(savedInstanceState);
+        }
+
+        wv = (WebView) findViewById(R.id.webPage);
         wv.getSettings().setJavaScriptEnabled(true);
         wv.getSettings().setDomStorageEnabled(true);
         wv.setWebChromeClient(new myWebChromeClient());
@@ -50,7 +56,23 @@ public class WebActivity extends Activity {
         IoTStarterApplication app = (IoTStarterApplication) getApplication();
         String url = Constants.QUICKSTART_URL + app.getDeviceId() + "/sensor/";
         Log.d(TAG, "Launching chromium with URL: " + url);
-        wv.loadUrl(url);
+        if (savedInstanceState == null) {
+            wv.loadUrl(url);
+        }
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState)
+    {
+        super.onSaveInstanceState(outState);
+        wv.saveState(outState);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState)
+    {
+        super.onRestoreInstanceState(savedInstanceState);
+        wv.restoreState(savedInstanceState);
     }
 
     /**************************************************************************

@@ -24,6 +24,8 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
+import android.view.WindowManager;
+
 import com.ibm.iot.android.iotstarter.IoTStarterApplication;
 import com.ibm.iot.android.iotstarter.R;
 import com.ibm.iot.android.iotstarter.fragments.IoTPagerFragment;
@@ -54,6 +56,8 @@ public class MainPagerActivity extends FragmentActivity {
             pager.setCurrentItem(tabIndex, false);
             Log.d(TAG, "savedinstancestate != null: " + tabIndex);
         }
+
+        this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
     }
 
     @Override
