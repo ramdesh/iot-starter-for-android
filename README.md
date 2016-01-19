@@ -1,31 +1,36 @@
 #IoT Starter for Android
-IoT Starter is a demo application for interacting with the IBM Internet of Things Foundation.
+IoT Starter is a demo application for interacting with the IBM Internet of Things (IoT) Foundation.
 The application turns your mobile device into a sensor that publishes and receives data to and from the cloud using the MQTT protocol.
 
 For the iOS version, refer to [IoT Starter for iOS](https://github.com/ibm-messaging/iot-starter-for-ios)
 
 ##Short Description
-IBM IoT Foundation (IoTF) is a fully managed, cloud-hosted service that is designed to simplify and derive the value from your IoT devices.
-This application demonstrates using an Android device as one of those IoT devices, and provides a variety of events and commands that it can publish or receive data to and from.
+IoT Foundation is a cloud-hosted service to simplify managing all of your IoT devices. The key features provided by the service include:
+- Device management
+- Scalable connectivity
+- Secure communication
+- Historical data
 
-IoT events and commands are user defined values used to differentiate the data that you publish or receive. For example, if you have a device that is publishing GPS coordinates, you may choose to publish it as a 'GPS' event. Or, if you want to send a reboot command to a device, you may choose to publish it as a 'system' or 'reboot' command.
+This application demonstrates using an Android device as one an IoT device, and provides a variety of events and commands that it can publish or receive data to and from.
 
-The application is set up to publish data to the following IoT event topics:
+Events and commands are user defined values used to differentiate the data that you publish or receive. For example, if you have a device that is publishing GPS coordinates, you may choose to publish it as a 'GPS' event. Or, if you want to send an alert command to a device, you may choose to publish it as an 'alert' or 'notification' command.
+
+The application can publish data to the following event topics:
 - Accelerometer (accel event)
 - Touchmove (touchmove event)
 - Text (text event)
 
-The application is set up to receive data on the following IoT command topics:
+The application can receive data on the following command topics:
 - Color (color command)
 - Light (light command)
 - Text (text command)
 - Alert (alert command)
 
-For more information on IoT Foundation, refer to https://internetofthings.ibmcloud.com/#/
+For more information on IoT Foundation, refer to https://docs.internetofthings.ibmcloud.com/index.html
 
 ##How it works
-A device that is registered with IoTF may publish and subscribe to data that is presented as either an event or command using the MQTT protocol.
-The Eclipse Paho MQTT Android Service is used to publish and subscribe to IoTF. This can be downloaded from
+A device that is registered with IoT Foundation may publish and subscribe to data that is presented as either an event or command using the MQTT protocol.
+The Eclipse Paho MQTT Android Service is used to publish and subscribe to IoT Foundation. This can be downloaded from
 [Eclipse Paho MQTT Android Service](http://www.eclipse.org/paho/clients/android/).
 
 MQTT is a lightweight messaging protocol that supports publish/subscribe messaging. With MQTT, an application publishes messages to a topic. These messages may then be received by another application that is subscribed to that topic. This allows for a detached messaging network where the subscribers and publishers do not need to be aware of each other.
@@ -34,8 +39,8 @@ The topics used by this application can be seen in the table below:
 ##Topics
 |Topic|Sample Topic|Sample Message|
 |:---------- |:---------- |:------------|
-|iot-2/evt/your_event_name/fmt/json|iot-2/evt/touchmove/fmt/json|{"d":{"screenX":0,"screenY":0,"deltaX":0,"deltaY":0}}|
-|iot-2/cmd/your_command_name/fmt/json|iot-2/cmd/light/fmt/json|{"d":{"light":"toggle"}}|
+|`iot-2/evt/<eventId>/fmt/json`|`iot-2/evt/touchmove/fmt/json`|`{"d":{"screenX":0,"screenY":0,"deltaX":0,"deltaY":0}}`|
+|`iot-2/cmd/<commandId>/fmt/json`|`iot-2/cmd/light/fmt/json`|`{"d":{"light":"toggle"}}`|
 
 For more information on the MQTT protocol, see http://mqtt.org/
 
@@ -43,12 +48,12 @@ For more information on the MQTT protocol, see http://mqtt.org/
 The IoT Starter application can be used in 2 ways.
 
 ### 1. Connect to IoT Quickstart
-In order to connect to IoTF Quickstart, all you need to do is specify 'quickstart' as the organization and enter a valid device-id. The Auth Token field can be left blank. The device-id is a 12 hexadecimal character MAC address in lower case, without delimiting characters. For example, a36d7c91bf9e. For more details, refer to the [Connect to Quickstart recipe](https://developer.ibm.com/iot/recipes/improvise-connect-quickstart/).
+In order to connect to IoT Quickstart, all you need to do is specify 'quickstart' as the organization and enter a valid device id. The Auth Token field can be left blank. The device-id is a 12 hexadecimal character MAC address in lower case, without delimiting characters. For example, a36d7c91bf9e. For more details, refer to the [MQTT Connectivity for Devices](https://docs.internetofthings.ibmcloud.com/messaging/devices.html#/).
 
 Once the app is connected, you can see the data visualized by going to [IoT Quickstart](https://quickstart.internetofthings.ibmcloud.com/) and entering the same device-id in the MAC address field.
 
 ### 2. Connect to an IoT organization as a registered device
-In order to try the application as a registered device, you must have an IoT Foundation organization. This can be done by signing up for an IBM Bluemix trial and creating an instance of the IBM Internet of Things Foundation service. This will create an IoT organization where you can register devices. Next, you must register your device with your organization. When registering your device, create a new device type called `Android` (case sensitive). More detailed instructions on registering devices can be found at [IBM Internet of Things Foundation](https://internetofthings.ibmcloud.com/#/).
+In order to try the application as a registered device, you must have an IoT Foundation organization. This can be done by signing up for an IBM Bluemix trial and creating an instance of the IBM Internet of Things Foundation service. This will create an IoT organization where you can register devices. Next, you must register your device with your organization. When registering your device, create a new device type called `Android` (case sensitive). More detailed instructions on registering devices can be found at [IBM Internet of Things Foundation](https://docs.internetofthings.ibmcloud.com/index.html).
 
 On launching the application for the first time, you will need to enter your credentials to connect your device to the IoT Foundation. The required information to connect your device includes:
 
@@ -60,41 +65,25 @@ Once you have entered the necessary credentials, you may activate your device as
 
 ##Prerequisites
 Required:
-- An [IBM Bluemix](https://ace.ng.bluemix.net/) account. A 30 day trial account is free.
+- An [IBM Bluemix](https://console.ng.bluemix.net/) account. A 30 day trial account is free.
 - An Internet of Things Foundation service registered in Bluemix.
 - An Android SDK installation
 
 ##Installation
-1. To install the application, download this project and import it into an IDE of your choice (IntelliJ, Android Studio, Eclipse, etc).
+1. To install the application, download this project and open it in Android Studio with "Open an existing Android Studio project".
 2. Set the project to use your Android SDK installation.
 3. Set the project libraries to include the Eclipse Paho jar files in the libs directory.
 4. Run the application.
 
 ##Notes
 In order to really see this demo do something, you must have an application to consume its data and publish data back
-to the application. For examples, refer to the [IoT Starter demo](http://m2m.demos.ibm.com/iotstarter.html).
-
-##Node-RED
-Node-RED is a tool used to create visual flows for the internet of things. When creating a Node-RED application in IBM BlueMix, one of the available
-types of nodes is an IBM IoT node, which can be used to publish and subscribe to the IBM Internet of Things Foundation.
-
-##Extending the application
-The application can be extended to publish and receive your own events and commands beyond the ones that are already supported.
-
-###Adding support for a new event type
-Event type messages are messages that the application publishes to IoTF. To add support for a new event type, define a new
-getXYZMessage(...) method in utils/MessageFactory.java. Then find a suitable place in the application to create the message and publish the
-message with IoTClient publishEvent(...).
-
-###Adding support for a new command type
-Command type messages are messages that the application receives which cause it to do something. To add support for a new command type,
-define a new command type in utils/Constants.java and add a new case for the command to MessageConductor steerMessage(...).
+to the IoT Starter application. For examples, refer to the [IoT Starter demo](http://m2m.demos.ibm.com/iotstarter.html).
 
 ##Resources
 - [IoT Starter](http://m2m.demos.ibm.com/iotstarter.html)
 - [IoT Starter for iOS](https://github.com/ibm-messaging/iot-starter-for-ios)
 - [IBM Internet of Things Foundation](https://internetofthings.ibmcloud.com/#/)
-- [IBM Bluemix](https://ace.ng.bluemix.net)
+- [IBM Bluemix](https://console.ng.bluemix.net/)
 - [IoT Recipes](https://developer.ibm.com/iot/)
 - [IoT Quickstart](http://quickstart.internetofthings.ibmcloud.com/#/)
 - [Node-RED](http://nodered.org/)
