@@ -93,7 +93,7 @@ public class IoTClient {
     }
 
     /**
-     * Connect to the Internet of Things Foundation
+     * Connect to the Watson Internet of Things Platform
      *
      * @param callbacks The IoTCallbacks object to register with the Mqtt Client
      * @param listener  The IoTActionListener object to register with the Mqtt Token.
@@ -145,7 +145,7 @@ public class IoTClient {
     }
 
     /**
-     * Disconnect the device from the Internet of Things Foundation
+     * Disconnect the device from the Watson Internet of Things Platform
      *
      * @param listener  The IoTActionListener object to register with the Mqtt Token.
      *
@@ -167,7 +167,7 @@ public class IoTClient {
     }
 
     /**
-     * Subscribe to an Internet of Things Foundation event
+     * Subscribe to a device event
      *
      * @param event         The IoT event to subscribe to
      * @param format        The format of data sent to the event topic
@@ -186,7 +186,7 @@ public class IoTClient {
     }
 
     /**
-     * Unsubscribe from an Internet of Things Foundation event
+     * Unsubscribe from a device event
      *
      * @param event         The IoT event to unsubscribe from
      * @param format        The format of data sent to the event topic
@@ -204,7 +204,7 @@ public class IoTClient {
     }
 
     /**
-     * Subscribe to an Internet of Things Foundation command
+     * Subscribe to a device  command
      *
      * @param command       The IoT command to subscribe to
      * @param format        The format of data sent to the event topic
@@ -223,7 +223,7 @@ public class IoTClient {
     }
 
     /**
-     * Unsubscribe from an Internet of Things Foundation command
+     * Unsubscribe from a device command
      *
      * @param command       The IoT command to unsubscribe from
      * @param format        The format of data sent to the event topic
@@ -241,7 +241,7 @@ public class IoTClient {
     }
 
     /**
-     * Publish a message to an Internet of Things Foundation event
+     * Publish a device event message
      *
      * @param event     The IoT event string to publish the message to
      * @param format    The format of data sent to the event topic
@@ -261,7 +261,7 @@ public class IoTClient {
     }
 
     /**
-     * Publish a message to an Internet of Things Foundation command
+     * Publish a device command message
      *
      * @param command   The IoT command to publish the message to
      * @param format    The format of data sent to the command topic

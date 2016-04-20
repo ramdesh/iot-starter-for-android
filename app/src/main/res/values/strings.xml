@@ -110,14 +110,14 @@
     <string name="finish_tutorial_label">Lets get started...</string>
     <string name="swipe_tutorial_label">Swipe to continue</string>
     <string name="tutorial_pageA_title">Welcome to IoT Starter</string>
-    <string name="tutorial_pageA_text">The IBM Internet of Things Foundation is a fully managed, cloud-hosted service that is designed to simplify and derive the value from your IoT devices.</string>
+    <string name="tutorial_pageA_text">The IBM Watson Internet of Things Platform is a fully managed, cloud-hosted service that is designed to simplify and derive the value from your IoT devices.</string>
     <string name="tutorial_pageB_title">How it works</string>
-    <string name="tutorial_pageB_text">There are two ways to connect your device to IBM IoT Foundation.\n1. Connect to Quickstart.\n2. Connect to your organization.</string>
+    <string name="tutorial_pageB_text">There are two ways to connect your device to the IBM Watson IoT Platform.\n1. Connect to Quickstart.\n2. Connect to your organization.</string>
     <string name="tutorial_pageC_title">What to do</string>
     <string name="tutorial_pageC1_title">Option 1: Connect to Quickstart</string>
     <string name="tutorial_pageC1_text">Step 1: Enter \'quickstart\' for Organization\nStep 2: Enter a valid MAC Address for Device ID\nStep 3: Press \'Activate Sensor\'</string>
-    <string name="tutorial_pageC2_title">Option 2: Connect to your IoTF Organization</string>
-    <string name="tutorial_pageC2_text">Step 1: Register a device of type \'Android\'\nStep 2: Enter your IoTF Device Credentials\nStep 3: Press \'Activate Sensor\'</string>
-    <!--string name="tutorial_pageC2_text">Step 1: Enter your IoTF organization ID\nStep 2: Enter your device ID\nStep 3: Enter your Authorization Token</string-->
+    <string name="tutorial_pageC2_title">Option 2: Connect to your IoT Organization</string>
+    <string name="tutorial_pageC2_text">Step 1: Register a device of type \'Android\'\nStep 2: Enter your IoT Device Credentials\nStep 3: Press \'Activate Sensor\'</string>
+    <!--string name="tutorial_pageC2_text">Step 1: Enter your IoT organization ID\nStep 2: Enter your device ID\nStep 3: Enter your Authorization Token</string-->
     <!-- End Tutorial Strings -->
 </resources>
