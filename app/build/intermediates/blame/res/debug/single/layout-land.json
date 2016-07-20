@@ -1,0 +1,50 @@
+[
+    {
+        "merged": "/home/ramindu/Projects/iot-starter-for-android/app/build/intermediates/res/merged/debug/layout-land/tutorial_fragment_b.xml",
+        "source": "/home/ramindu/Projects/iot-starter-for-android/app/src/main/res/layout-land/tutorial_fragment_b.xml"
+    },
+    {
+        "merged": "/home/ramindu/Projects/iot-starter-for-android/app/build/intermediates/res/merged/debug/layout-land/main.xml",
+        "source": "/home/ramindu/Projects/iot-starter-for-android/app/src/main/res/layout-land/main.xml"
+    },
+    {
+        "merged": "/home/ramindu/Projects/iot-starter-for-android/app/build/intermediates/res/merged/debug/layout-land/iot.xml",
+        "source": "/home/ramindu/Projects/iot-starter-for-android/app/src/main/res/layout-land/iot.xml"
+    },
+    {
+        "merged": "/home/ramindu/Projects/iot-starter-for-android/app/build/intermediates/res/merged/debug/layout-land/tutorial_fragment_a.xml",
+        "source": "/home/ramindu/Projects/iot-starter-for-android/app/src/main/res/layout-land/tutorial_fragment_a.xml"
+    },
+    {
+        "merged": "/home/ramindu/Projects/iot-starter-for-android/app/build/intermediates/res/merged/debug/layout-land/webview.xml",
+        "source": "/home/ramindu/Projects/iot-starter-for-android/app/src/main/res/layout-land/webview.xml"
+    },
+    {
+        "merged": "/home/ramindu/Projects/iot-starter-for-android/app/build/intermediates/res/merged/debug/layout-land/tutorial_fragment_c.xml",
+        "source": "/home/ramindu/Projects/iot-starter-for-android/app/src/main/res/layout-land/tutorial_fragment_c.xml"
+    },
+    {
+        "merged": "/home/ramindu/Projects/iot-starter-for-android/app/build/intermediates/res/merged/debug/layout-land/list_item.xml",
+        "source": "/home/ramindu/Projects/iot-starter-for-android/app/src/main/res/layout-land/list_item.xml"
+    },
+    {
+        "merged": "/home/ramindu/Projects/iot-starter-for-android/app/build/intermediates/res/merged/debug/layout-land/log.xml",
+        "source": "/home/ramindu/Projects/iot-starter-for-android/app/src/main/res/layout-land/log.xml"
+    },
+    {
+        "merged": "/home/ramindu/Projects/iot-starter-for-android/app/build/intermediates/res/merged/debug/layout-land/log_badge.xml",
+        "source": "/home/ramindu/Projects/iot-starter-for-android/app/src/main/res/layout-land/log_badge.xml"
+    },
+    {
+        "merged": "/home/ramindu/Projects/iot-starter-for-android/app/build/intermediates/res/merged/debug/layout-land/profiles.xml",
+        "source": "/home/ramindu/Projects/iot-starter-for-android/app/src/main/res/layout-land/profiles.xml"
+    },
+    {
+        "merged": "/home/ramindu/Projects/iot-starter-for-android/app/build/intermediates/res/merged/debug/layout-land/login.xml",
+        "source": "/home/ramindu/Projects/iot-starter-for-android/app/src/main/res/layout-land/login.xml"
+    },
+    {
+        "merged": "/home/ramindu/Projects/iot-starter-for-android/app/build/intermediates/res/merged/debug/layout-land/tutorial_pagertabs.xml",
+        "source": "/home/ramindu/Projects/iot-starter-for-android/app/src/main/res/layout-land/tutorial_pagertabs.xml"
+    }
+]

@@ -1,0 +1,14 @@
+[
+    {
+        "merged": "/home/ramindu/Projects/iot-starter-for-android/app/build/intermediates/res/merged/debug/drawable-ldpi-v4/ic_logo.png",
+        "source": "/home/ramindu/Projects/iot-starter-for-android/app/src/main/res/drawable-ldpi/ic_logo.png"
+    },
+    {
+        "merged": "/home/ramindu/Projects/iot-starter-for-android/app/build/intermediates/res/merged/debug/drawable-ldpi-v4/ic_logo_b.png",
+        "source": "/home/ramindu/Projects/iot-starter-for-android/app/src/main/res/drawable-ldpi/ic_logo_b.png"
+    },
+    {
+        "merged": "/home/ramindu/Projects/iot-starter-for-android/app/build/intermediates/res/merged/debug/drawable-ldpi-v4/ic_icon.png",
+        "source": "/home/ramindu/Projects/iot-starter-for-android/app/src/main/res/drawable-ldpi/ic_icon.png"
+    }
+]

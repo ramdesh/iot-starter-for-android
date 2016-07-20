@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<instant-run
+    abi="arm64-v8a,armeabi-v7a,armeabi"
+    api-level="23"
+    density="560dpi"
+    format="7"
+    timestamp="5280638741802" >
+
+    <task
+        name="javac"
+        duration="210" />
+    <task
+        name="instant-run-dex"
+        duration="0" />
+    <task
+        name="instant-run-transform"
+        duration="4" />
+    <task
+        name="verifier"
+        duration="1" />
+
+    <artifact
+        location="/home/ramindu/Projects/iot-starter-for-android/app/build/intermediates/transforms/dex/debug/folders/1000/5/slice_0/classes.dex"
+        type="DEX" />
+
+    <build timestamp="1249329746640" >
+        <artifact
+            location="/home/ramindu/Projects/iot-starter-for-android/app/build/outputs/apk/app-debug.apk"
+            type="MAIN" />
+    </build>
+    <build timestamp="4747107841851" >
+        <artifact
+            location="/home/ramindu/Projects/iot-starter-for-android/app/build/intermediates/transforms/dex/debug/folders/1000/5/slice_6/classes.dex"
+            type="DEX" />
+    </build>
+    <build timestamp="5064471166162" >
+        <artifact
+            location="/home/ramindu/Projects/iot-starter-for-android/app/build/intermediates/transforms/dex/debug/folders/1000/5/slice_2/classes.dex"
+            type="DEX" />
+    </build>
+    <build timestamp="5140123235938" >
+        <artifact
+            location="/home/ramindu/Projects/iot-starter-for-android/app/build/intermediates/res/resources-debug.ap_"
+            type="RESOURCES" />
+    </build>
+    <build timestamp="5280638741802" >
+        <artifact
+            location="/home/ramindu/Projects/iot-starter-for-android/app/build/intermediates/transforms/dex/debug/folders/1000/5/slice_0/classes.dex"
+            type="DEX" />
+    </build>
+
+</instant-run>

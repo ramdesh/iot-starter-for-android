@@ -127,15 +127,6 @@ public class IoTStarterPagerFragment extends Fragment {
 
         // Handle presses on the action bar items
         switch (item.getItemId()) {
-            case R.id.action_accel:
-                app.toggleAccel();
-                return true;
-            case R.id.action_profiles:
-                openProfiles();
-                return true;
-            case R.id.action_tutorial:
-                openTutorial();
-                return true;
             case R.id.action_web:
                 openWeb();
                 return true;

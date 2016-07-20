@@ -113,15 +113,6 @@ public class IoTPagerFragment extends IoTStarterPagerFragment {
 
         updateViewStrings();
 
-        // setup button listeners
-        Button button = (Button) getActivity().findViewById(R.id.sendText);
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                handleSendText();
-            }
-        });
-
         drawingView = (DrawingView) getActivity().findViewById(R.id.drawing);
         drawingView.setContext(context);
     }

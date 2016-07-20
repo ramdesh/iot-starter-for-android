@@ -30,7 +30,7 @@ public class MessageFactory {
      * @param lat Double containing device latitude
      * @return String containing JSON formatted message
      */
-    public static String getAccelMessage(float G[], float O[], float yaw, double lon, double lat) {
+    public static String getAccelMessage(float G[], float O[], float yaw, double lon, double lat, double pressure) {
         return "{ \"d\": {" +
                 "\"acceleration_x\":" + G[0] + ", " +
                 "\"acceleration_y\":" + G[1] + ", " +
@@ -39,7 +39,8 @@ public class MessageFactory {
                 "\"pitch\":" + O[1] + ", " +
                 "\"yaw\":" + yaw + ", " +
                 "\"lon\":" + lon + ", " +
-                "\"lat\":" + lat + " " +
+                "\"lat\":" + lat + ", " +
+                "\"pressure\":" + pressure + " " +
                 "} }";
     }
 

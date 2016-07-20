@@ -84,6 +84,7 @@ public class IoTStarterApplication extends Application {
         super.onCreate();
 
         settings = getSharedPreferences(Constants.SETTINGS, 0);
+        this.setAccelEnabled(true);
 
         //SharedPreferences.Editor editor = settings.edit();
         /* Start app with 0 saved settings */

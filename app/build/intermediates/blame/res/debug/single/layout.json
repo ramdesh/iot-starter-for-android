@@ -1,0 +1,146 @@
+[
+    {
+        "merged": "/home/ramindu/Projects/iot-starter-for-android/app/build/intermediates/res/merged/debug/layout/tutorial_fragment_c.xml",
+        "source": "/home/ramindu/Projects/iot-starter-for-android/app/src/main/res/layout/tutorial_fragment_c.xml"
+    },
+    {
+        "merged": "/home/ramindu/Projects/iot-starter-for-android/app/build/intermediates/res/merged/debug/layout/support_simple_spinner_dropdown_item.xml",
+        "source": "/home/ramindu/Projects/iot-starter-for-android/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/21.0.3/res/layout/support_simple_spinner_dropdown_item.xml"
+    },
+    {
+        "merged": "/home/ramindu/Projects/iot-starter-for-android/app/build/intermediates/res/merged/debug/layout/abc_action_menu_item_layout.xml",
+        "source": "/home/ramindu/Projects/iot-starter-for-android/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/21.0.3/res/layout/abc_action_menu_item_layout.xml"
+    },
+    {
+        "merged": "/home/ramindu/Projects/iot-starter-for-android/app/build/intermediates/res/merged/debug/layout/main.xml",
+        "source": "/home/ramindu/Projects/iot-starter-for-android/app/src/main/res/layout/main.xml"
+    },
+    {
+        "merged": "/home/ramindu/Projects/iot-starter-for-android/app/build/intermediates/res/merged/debug/layout/abc_search_view.xml",
+        "source": "/home/ramindu/Projects/iot-starter-for-android/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/21.0.3/res/layout/abc_search_view.xml"
+    },
+    {
+        "merged": "/home/ramindu/Projects/iot-starter-for-android/app/build/intermediates/res/merged/debug/layout/list_item.xml",
+        "source": "/home/ramindu/Projects/iot-starter-for-android/app/src/main/res/layout/list_item.xml"
+    },
+    {
+        "merged": "/home/ramindu/Projects/iot-starter-for-android/app/build/intermediates/res/merged/debug/layout/abc_action_bar_view_list_nav_layout.xml",
+        "source": "/home/ramindu/Projects/iot-starter-for-android/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/21.0.3/res/layout/abc_action_bar_view_list_nav_layout.xml"
+    },
+    {
+        "merged": "/home/ramindu/Projects/iot-starter-for-android/app/build/intermediates/res/merged/debug/layout/abc_screen_simple.xml",
+        "source": "/home/ramindu/Projects/iot-starter-for-android/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/21.0.3/res/layout/abc_screen_simple.xml"
+    },
+    {
+        "merged": "/home/ramindu/Projects/iot-starter-for-android/app/build/intermediates/res/merged/debug/layout/log.xml",
+        "source": "/home/ramindu/Projects/iot-starter-for-android/app/src/main/res/layout/log.xml"
+    },
+    {
+        "merged": "/home/ramindu/Projects/iot-starter-for-android/app/build/intermediates/res/merged/debug/layout/abc_list_menu_item_checkbox.xml",
+        "source": "/home/ramindu/Projects/iot-starter-for-android/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/21.0.3/res/layout/abc_list_menu_item_checkbox.xml"
+    },
+    {
+        "merged": "/home/ramindu/Projects/iot-starter-for-android/app/build/intermediates/res/merged/debug/layout/webview.xml",
+        "source": "/home/ramindu/Projects/iot-starter-for-android/app/src/main/res/layout/webview.xml"
+    },
+    {
+        "merged": "/home/ramindu/Projects/iot-starter-for-android/app/build/intermediates/res/merged/debug/layout/abc_action_menu_layout.xml",
+        "source": "/home/ramindu/Projects/iot-starter-for-android/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/21.0.3/res/layout/abc_action_menu_layout.xml"
+    },
+    {
+        "merged": "/home/ramindu/Projects/iot-starter-for-android/app/build/intermediates/res/merged/debug/layout/abc_action_mode_bar.xml",
+        "source": "/home/ramindu/Projects/iot-starter-for-android/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/21.0.3/res/layout/abc_action_mode_bar.xml"
+    },
+    {
+        "merged": "/home/ramindu/Projects/iot-starter-for-android/app/build/intermediates/res/merged/debug/layout/abc_list_menu_item_radio.xml",
+        "source": "/home/ramindu/Projects/iot-starter-for-android/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/21.0.3/res/layout/abc_list_menu_item_radio.xml"
+    },
+    {
+        "merged": "/home/ramindu/Projects/iot-starter-for-android/app/build/intermediates/res/merged/debug/layout/abc_simple_dropdown_hint.xml",
+        "source": "/home/ramindu/Projects/iot-starter-for-android/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/21.0.3/res/layout/abc_simple_dropdown_hint.xml"
+    },
+    {
+        "merged": "/home/ramindu/Projects/iot-starter-for-android/app/build/intermediates/res/merged/debug/layout/abc_activity_chooser_view_include.xml",
+        "source": "/home/ramindu/Projects/iot-starter-for-android/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/21.0.3/res/layout/abc_activity_chooser_view_include.xml"
+    },
+    {
+        "merged": "/home/ramindu/Projects/iot-starter-for-android/app/build/intermediates/res/merged/debug/layout/abc_popup_menu_item_layout.xml",
+        "source": "/home/ramindu/Projects/iot-starter-for-android/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/21.0.3/res/layout/abc_popup_menu_item_layout.xml"
+    },
+    {
+        "merged": "/home/ramindu/Projects/iot-starter-for-android/app/build/intermediates/res/merged/debug/layout/tutorial_fragment_a.xml",
+        "source": "/home/ramindu/Projects/iot-starter-for-android/app/src/main/res/layout/tutorial_fragment_a.xml"
+    },
+    {
+        "merged": "/home/ramindu/Projects/iot-starter-for-android/app/build/intermediates/res/merged/debug/layout/abc_screen_simple_overlay_action_mode.xml",
+        "source": "/home/ramindu/Projects/iot-starter-for-android/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/21.0.3/res/layout/abc_screen_simple_overlay_action_mode.xml"
+    },
+    {
+        "merged": "/home/ramindu/Projects/iot-starter-for-android/app/build/intermediates/res/merged/debug/layout/abc_list_menu_item_layout.xml",
+        "source": "/home/ramindu/Projects/iot-starter-for-android/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/21.0.3/res/layout/abc_list_menu_item_layout.xml"
+    },
+    {
+        "merged": "/home/ramindu/Projects/iot-starter-for-android/app/build/intermediates/res/merged/debug/layout/iot.xml",
+        "source": "/home/ramindu/Projects/iot-starter-for-android/app/src/main/res/layout/iot.xml"
+    },
+    {
+        "merged": "/home/ramindu/Projects/iot-starter-for-android/app/build/intermediates/res/merged/debug/layout/abc_search_dropdown_item_icons_2line.xml",
+        "source": "/home/ramindu/Projects/iot-starter-for-android/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/21.0.3/res/layout/abc_search_dropdown_item_icons_2line.xml"
+    },
+    {
+        "merged": "/home/ramindu/Projects/iot-starter-for-android/app/build/intermediates/res/merged/debug/layout/abc_action_bar_up_container.xml",
+        "source": "/home/ramindu/Projects/iot-starter-for-android/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/21.0.3/res/layout/abc_action_bar_up_container.xml"
+    },
+    {
+        "merged": "/home/ramindu/Projects/iot-starter-for-android/app/build/intermediates/res/merged/debug/layout/abc_list_menu_item_icon.xml",
+        "source": "/home/ramindu/Projects/iot-starter-for-android/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/21.0.3/res/layout/abc_list_menu_item_icon.xml"
+    },
+    {
+        "merged": "/home/ramindu/Projects/iot-starter-for-android/app/build/intermediates/res/merged/debug/layout/tutorial_fragment_b.xml",
+        "source": "/home/ramindu/Projects/iot-starter-for-android/app/src/main/res/layout/tutorial_fragment_b.xml"
+    },
+    {
+        "merged": "/home/ramindu/Projects/iot-starter-for-android/app/build/intermediates/res/merged/debug/layout/main_pagertabs.xml",
+        "source": "/home/ramindu/Projects/iot-starter-for-android/app/src/main/res/layout/main_pagertabs.xml"
+    },
+    {
+        "merged": "/home/ramindu/Projects/iot-starter-for-android/app/build/intermediates/res/merged/debug/layout/profiles.xml",
+        "source": "/home/ramindu/Projects/iot-starter-for-android/app/src/main/res/layout/profiles.xml"
+    },
+    {
+        "merged": "/home/ramindu/Projects/iot-starter-for-android/app/build/intermediates/res/merged/debug/layout/abc_action_bar_title_item.xml",
+        "source": "/home/ramindu/Projects/iot-starter-for-android/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/21.0.3/res/layout/abc_action_bar_title_item.xml"
+    },
+    {
+        "merged": "/home/ramindu/Projects/iot-starter-for-android/app/build/intermediates/res/merged/debug/layout/login.xml",
+        "source": "/home/ramindu/Projects/iot-starter-for-android/app/src/main/res/layout/login.xml"
+    },
+    {
+        "merged": "/home/ramindu/Projects/iot-starter-for-android/app/build/intermediates/res/merged/debug/layout/abc_expanded_menu_layout.xml",
+        "source": "/home/ramindu/Projects/iot-starter-for-android/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/21.0.3/res/layout/abc_expanded_menu_layout.xml"
+    },
+    {
+        "merged": "/home/ramindu/Projects/iot-starter-for-android/app/build/intermediates/res/merged/debug/layout/abc_screen_toolbar.xml",
+        "source": "/home/ramindu/Projects/iot-starter-for-android/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/21.0.3/res/layout/abc_screen_toolbar.xml"
+    },
+    {
+        "merged": "/home/ramindu/Projects/iot-starter-for-android/app/build/intermediates/res/merged/debug/layout/abc_activity_chooser_view_list_item.xml",
+        "source": "/home/ramindu/Projects/iot-starter-for-android/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/21.0.3/res/layout/abc_activity_chooser_view_list_item.xml"
+    },
+    {
+        "merged": "/home/ramindu/Projects/iot-starter-for-android/app/build/intermediates/res/merged/debug/layout/tutorial_pagertabs.xml",
+        "source": "/home/ramindu/Projects/iot-starter-for-android/app/src/main/res/layout/tutorial_pagertabs.xml"
+    },
+    {
+        "merged": "/home/ramindu/Projects/iot-starter-for-android/app/build/intermediates/res/merged/debug/layout/abc_action_mode_close_item_material.xml",
+        "source": "/home/ramindu/Projects/iot-starter-for-android/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/21.0.3/res/layout/abc_action_mode_close_item_material.xml"
+    },
+    {
+        "merged": "/home/ramindu/Projects/iot-starter-for-android/app/build/intermediates/res/merged/debug/layout/log_badge.xml",
+        "source": "/home/ramindu/Projects/iot-starter-for-android/app/src/main/res/layout/log_badge.xml"
+    },
+    {
+        "merged": "/home/ramindu/Projects/iot-starter-for-android/app/build/intermediates/res/merged/debug/layout/abc_activity_chooser_view.xml",
+        "source": "/home/ramindu/Projects/iot-starter-for-android/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/21.0.3/res/layout/abc_activity_chooser_view.xml"
+    }
+]

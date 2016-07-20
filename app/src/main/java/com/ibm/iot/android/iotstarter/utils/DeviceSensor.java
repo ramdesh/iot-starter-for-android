@@ -41,6 +41,8 @@ public class DeviceSensor implements SensorEventListener {
     private final SensorManager sensorManager;
     private final Sensor accelerometer;
     private final Sensor magnetometer;
+    private final Sensor gyroscope;
+    private final Sensor pressureSensor;
     private final Context context;
     private Timer timer;
     private boolean isEnabled = false;
@@ -50,6 +52,8 @@ public class DeviceSensor implements SensorEventListener {
         sensorManager = (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
         accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         magnetometer = sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
+        gyroscope = sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
+        pressureSensor = sensorManager.getDefaultSensor(Sensor.TYPE_PRESSURE);
         app = (IoTStarterApplication) context.getApplicationContext();
     }
 
@@ -72,7 +76,9 @@ public class DeviceSensor implements SensorEventListener {
         Log.i(TAG, ".enableSensor() entered");
         if (!isEnabled) {
             sensorManager.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_NORMAL);
+            sensorManager.registerListener(this, gyroscope, SensorManager.SENSOR_DELAY_NORMAL);
             sensorManager.registerListener(this, magnetometer, SensorManager.SENSOR_DELAY_NORMAL);
+            sensorManager.registerListener(this, pressureSensor, SensorManager.SENSOR_DELAY_NORMAL);
             timer = new Timer();
             timer.scheduleAtFixedRate(new SendTimerTask(), 1000, 1000);
             isEnabled = true;
@@ -94,6 +100,7 @@ public class DeviceSensor implements SensorEventListener {
     // Values used for accelerometer, magnetometer, orientation sensor data
     private float[] G = new float[3]; // gravity x,y,z
     private float[] M = new float[3]; // geomagnetic field x,y,z
+    private float pressure; // Barometric Pressure
     private final float[] R = new float[9]; // rotation matrix
     private final float[] I = new float[9]; // inclination matrix
     private float[] O = new float[3]; // orientation azimuth, pitch, roll
@@ -117,6 +124,9 @@ public class DeviceSensor implements SensorEventListener {
             Log.v(TAG, "Magnetometer -- x: " + sensorEvent.values[0] + " y: "
                     + sensorEvent.values[1] + " z: " + sensorEvent.values[2]);
             M = sensorEvent.values;
+        } else if (sensorEvent.sensor.getType() == Sensor.TYPE_PRESSURE) {
+            Log.v(TAG, "Barometer -- : " + sensorEvent.values[0]);
+            pressure = sensorEvent.values[0];
         }
         if (G != null && M != null) {
             if (SensorManager.getRotationMatrix(R, I, G, M)) {
@@ -157,7 +167,7 @@ public class DeviceSensor implements SensorEventListener {
                 lon = app.getCurrentLocation().getLongitude();
                 lat = app.getCurrentLocation().getLatitude();
             }
-            String messageData = MessageFactory.getAccelMessage(G, O, yaw, lon, lat);
+            String messageData = MessageFactory.getAccelMessage(G, O, yaw, lon, lat, pressure);
 
             try {
                 // create ActionListener to handle message published results
