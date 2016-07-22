@@ -31,7 +31,6 @@ import android.widget.EditText;
 import com.ibm.iot.android.iotstarter.IoTStarterApplication;
 import com.ibm.iot.android.iotstarter.R;
 import com.ibm.iot.android.iotstarter.activities.MainPagerActivity;
-import com.ibm.iot.android.iotstarter.activities.TutorialPagerActivity;
 import com.ibm.iot.android.iotstarter.activities.ProfilesActivity;
 import com.ibm.iot.android.iotstarter.activities.WebActivity;
 
@@ -48,7 +47,7 @@ public class IoTStarterPagerFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
-        app.setCurrentActivity(getActivity());
+
     }
 
     /**
@@ -88,12 +87,6 @@ public class IoTStarterPagerFragment extends Fragment {
             Intent profilesIntent = new Intent(getActivity().getApplicationContext(), ProfilesActivity.class);
             startActivity(profilesIntent);
         }
-    }
-
-    void openTutorial() {
-        Log.d(TAG, ".openTutorial() entered");
-        Intent tutorialIntent = new Intent(getActivity().getApplicationContext(), TutorialPagerActivity.class);
-        startActivity(tutorialIntent);
     }
 
     private void openWeb() {
