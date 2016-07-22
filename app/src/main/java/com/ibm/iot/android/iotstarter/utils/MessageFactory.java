@@ -15,23 +15,78 @@
  *******************************************************************************/
 package com.ibm.iot.android.iotstarter.utils;
 
+import android.util.Log;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.TimeZone;
+
 /**
  * Build messages to be published by the application.
  * This class is currently unused.
  */
 public class MessageFactory {
-
+    private static final String TAG = "SensorSim";
     /**
      * Construct a JSON formatted string accel event message
-     * @param G Float array with accelerometer x, y, z data
-     * @param O Float array with gyroscope roll, pitch data
-     * @param yaw Float representing gyroscope yaw value
+     * @param A Float array with accelerometer x, y, z data
+     * @param G Float array with gyroscope roll, pitch data
+     * @param M Float array representing magnetometer values
      * @param lon Double containing device longitude
      * @param lat Double containing device latitude
+     * @param pressure Double containing barometric pressure
+     * @param activity String describing the activity that is being executed
      * @return String containing JSON formatted message
      */
-    public static String getAccelMessage(float G[], float O[], float yaw, double lon, double lat, double pressure) {
-        return "{ \"d\": {" +
+    public static String getAccelMessage(float A[], float G[], float M[], double lon, double lat, double pressure, String activity) {
+
+        TimeZone tz = TimeZone.getTimeZone("UTC");
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm'Z'"); // Quoted "Z" to indicate UTC, no timezone offset
+        df.setTimeZone(tz);
+        String nowAsISO = df.format(new Date());
+
+        JSONObject message = new JSONObject();
+        JSONObject d = new JSONObject();
+
+        try {
+            JSONObject accelerometer = new JSONObject();
+            accelerometer.put("x", A[0]);
+            accelerometer.put("y", A[1]);
+            accelerometer.put("z", A[2]);
+
+            JSONObject gyroscope = new JSONObject();
+            gyroscope.put("x", G[0]);
+            gyroscope.put("y", G[1]);
+            gyroscope.put("z", G[2]);
+
+            JSONObject magnetometer = new JSONObject();
+            magnetometer.put("x", M[0]);
+            magnetometer.put("y", M[1]);
+            magnetometer.put("z", M[2]);
+
+            JSONObject location = new JSONObject();
+            location.put("lat", lat);
+            location.put("long", lon);
+
+            d.put("accelerometer", accelerometer);
+            d.put("gyroscope", gyroscope);
+            d.put("gps", location);
+            d.put("magnetometer", magnetometer);
+            d.put("pressure", pressure);
+            d.put("activity", activity);
+            d.put("timestamp", nowAsISO);
+
+            message.put("d", d);
+
+        } catch(JSONException jsone) {
+            Log.e(TAG, jsone.getMessage());
+        }
+
+        /*return "{ \"d\": {" +
                 "\"acceleration_x\":" + G[0] + ", " +
                 "\"acceleration_y\":" + G[1] + ", " +
                 "\"acceleration_z\":" + G[2] + ", " +
@@ -41,7 +96,8 @@ public class MessageFactory {
                 "\"lon\":" + lon + ", " +
                 "\"lat\":" + lat + ", " +
                 "\"pressure\":" + pressure + " " +
-                "} }";
+                "} }";*/
+        return message.toString();
     }
 
     /**

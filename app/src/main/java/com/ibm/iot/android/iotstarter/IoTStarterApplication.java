@@ -15,6 +15,7 @@
  *******************************************************************************/
 package com.ibm.iot.android.iotstarter;
 
+import android.app.Activity;
 import android.app.Application;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -75,6 +76,8 @@ public class IoTStarterApplication extends Application {
     private final List<IoTDevice> profiles = new ArrayList<IoTDevice>();
     private final ArrayList<String> profileNames = new ArrayList<String>();
 
+    private Activity currentActivity;
+
     /**
      * Called when the application is created. Initializes the application.
      */
@@ -113,6 +116,21 @@ public class IoTStarterApplication extends Application {
         loadProfiles();
     }
 
+    /**
+     * Sets the current running activity object
+     * @param activity
+     */
+    public void setCurrentActivity(Activity activity) {
+        this.currentActivity = activity;
+    }
+
+    /**
+     * Returns the current running activity object
+     * @return Activity
+     */
+    public Activity getCurrentActivity() {
+        return this.currentActivity;
+    }
     /**
      * Called when old application stored settings values are found.
      * Converts old stored settings into new profile setting.

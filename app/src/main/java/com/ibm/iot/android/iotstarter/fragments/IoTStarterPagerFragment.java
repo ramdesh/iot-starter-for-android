@@ -48,6 +48,7 @@ public class IoTStarterPagerFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+        app.setCurrentActivity(getActivity());
     }
 
     /**

@@ -99,7 +99,6 @@ public class MainPagerActivity extends FragmentActivity {
         Log.d(TAG, ".getCurrentItem() entered");
         return pager.getCurrentItem();
     }
-
     /**
      * Adapter for the ViewPager. Adds the tutorial fragments to the pager.
      */

@@ -123,11 +123,5 @@
                 android:text="@string/messages_received"
                 android:id="@+id/messagesReceivedView"
                 />
-        <Button
-                style="@style/BottomButton"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/sendText"
-                android:text="@string/send_text"/>
     </LinearLayout>
 </RelativeLayout>

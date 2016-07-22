@@ -22,7 +22,10 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.util.Log;
+import android.widget.EditText;
+
 import com.ibm.iot.android.iotstarter.IoTStarterApplication;
+import com.ibm.iot.android.iotstarter.R;
 import com.ibm.iot.android.iotstarter.iot.IoTClient;
 import org.eclipse.paho.client.mqttv3.MqttException;
 
@@ -47,6 +50,8 @@ public class DeviceSensor implements SensorEventListener {
     private Timer timer;
     private boolean isEnabled = false;
 
+    private EditText activityTypeEditText;
+
     private DeviceSensor(Context context) {
         this.context = context;
         sensorManager = (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
@@ -55,6 +60,7 @@ public class DeviceSensor implements SensorEventListener {
         gyroscope = sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
         pressureSensor = sensorManager.getDefaultSensor(Sensor.TYPE_PRESSURE);
         app = (IoTStarterApplication) context.getApplicationContext();
+        activityTypeEditText = (EditText)app.getCurrentActivity().findViewById(R.id.activityTypeText);
     }
 
     /**
@@ -98,10 +104,11 @@ public class DeviceSensor implements SensorEventListener {
     }
 
     // Values used for accelerometer, magnetometer, orientation sensor data
-    private float[] G = new float[3]; // gravity x,y,z
+    private float[] A = new float[3]; // gravity x,y,z
     private float[] M = new float[3]; // geomagnetic field x,y,z
+    private float[] G = new float[3]; // gyroscope values x,y,z
     private float pressure; // Barometric Pressure
-    private final float[] R = new float[9]; // rotation matrix
+    private final float[] ROT = new float[9]; // rotation matrix
     private final float[] I = new float[9]; // inclination matrix
     private float[] O = new float[3]; // orientation azimuth, pitch, roll
     private float yaw;
@@ -115,10 +122,13 @@ public class DeviceSensor implements SensorEventListener {
     @Override
     public void onSensorChanged(SensorEvent sensorEvent) {
         Log.v(TAG, "onSensorChanged() entered");
+
+
+
         if (sensorEvent.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
             Log.v(TAG, "Accelerometer -- x: " + sensorEvent.values[0] + " y: "
                     + sensorEvent.values[1] + " z: " + sensorEvent.values[2]);
-            G = sensorEvent.values;
+            A = sensorEvent.values;
 
         } else if (sensorEvent.sensor.getType() == Sensor.TYPE_MAGNETIC_FIELD) {
             Log.v(TAG, "Magnetometer -- x: " + sensorEvent.values[0] + " y: "
@@ -127,11 +137,15 @@ public class DeviceSensor implements SensorEventListener {
         } else if (sensorEvent.sensor.getType() == Sensor.TYPE_PRESSURE) {
             Log.v(TAG, "Barometer -- : " + sensorEvent.values[0]);
             pressure = sensorEvent.values[0];
+        } else if (sensorEvent.sensor.getType() == Sensor.TYPE_GYROSCOPE) {
+            Log.v(TAG, "Gyroscope -- x: " + sensorEvent.values[0] + " y: "
+                    + sensorEvent.values[1] + " z: " + sensorEvent.values[2]);
+            G = sensorEvent.values;
         }
-        if (G != null && M != null) {
-            if (SensorManager.getRotationMatrix(R, I, G, M)) {
+        if (A != null && M != null) {
+            if (SensorManager.getRotationMatrix(ROT, I, A, M)) {
                 float[] previousO = O.clone();
-                O = SensorManager.getOrientation(R, O);
+                O = SensorManager.getOrientation(ROT, O);
                 yaw = O[0] - previousO[0];
                 Log.v(TAG, "Orientation: azimuth: " + O[0] + " pitch: " + O[1] + " roll: " + O[2] + " yaw: " + yaw);
             }
@@ -167,7 +181,8 @@ public class DeviceSensor implements SensorEventListener {
                 lon = app.getCurrentLocation().getLongitude();
                 lat = app.getCurrentLocation().getLatitude();
             }
-            String messageData = MessageFactory.getAccelMessage(G, O, yaw, lon, lat, pressure);
+
+            String messageData = MessageFactory.getAccelMessage(A, G, M, lon, lat, pressure, activityTypeEditText.getText().toString());
 
             try {
                 // create ActionListener to handle message published results
@@ -192,7 +207,7 @@ public class DeviceSensor implements SensorEventListener {
                 Log.d(TAG, ".run() received exception on publishEvent()");
             }
 
-            app.setAccelData(G);
+            app.setAccelData(A);
 
             //String runningActivity = app.getCurrentRunningActivity();
             //if (runningActivity != null && runningActivity.equals(IoTPagerFragment.class.getName())) {

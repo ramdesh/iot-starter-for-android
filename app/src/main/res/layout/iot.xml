@@ -36,7 +36,8 @@
         android:paddingLeft="@dimen/activity_horizontal_margin"
         android:paddingRight="@dimen/activity_horizontal_margin"
         android:paddingTop="@dimen/activity_vertical_margin"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:id="@+id/linearLayout2">
         <TextView
                 style="@style/MyActionBarTitleText"
                 android:layout_width="wrap_content"
@@ -57,42 +58,14 @@
     </LinearLayout>
     <LinearLayout android:layout_width="match_parent"
                   android:layout_height="wrap_content"
-                  android:layout_centerVertical="true"
-                  android:layout_weight="1"
+        android:layout_weight="1"
                   android:gravity="center|bottom"
-                  android:orientation="vertical">
-        <TextView
-                style="@style/MyActionBarTitleText"
-                android:gravity="center"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/accel_info"
-                android:id="@+id/accelInfo"
-                />
-        <TextView
-                style="@style/MyActionBarTitleText"
-                android:gravity="center"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/accel_x"
-                android:id="@+id/accelX"
-                />
-        <TextView
-                style="@style/MyActionBarTitleText"
-                android:gravity="center"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/accel_y"
-                android:id="@+id/accelY"
-                />
-        <TextView
-                style="@style/MyActionBarTitleText"
-                android:gravity="center"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/accel_z"
-                android:id="@+id/accelZ"
-                />
+                  android:orientation="vertical"
+        android:id="@+id/linearLayout"
+        android:layout_below="@+id/accelZ"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true">
+
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
@@ -101,7 +74,8 @@
         android:layout_weight="1"
         android:gravity="center|bottom"
         android:paddingBottom="@dimen/activity_vertical_margin"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:id="@+id/linearLayout3">
         <TextView
                 style="@style/MyActionBarTitleText"
                 android:gravity="center"
@@ -123,4 +97,66 @@
                 android:id="@+id/messagesReceivedView"
                 />
     </LinearLayout>
+
+    <TextView
+            style="@style/MyActionBarTitleText"
+            android:gravity="center"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/accel_info"
+            android:id="@+id/accelInfo"
+        android:layout_below="@+id/linearLayout2"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="56dp" />
+
+    <TextView
+            style="@style/MyActionBarTitleText"
+            android:gravity="center"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/accel_x"
+            android:id="@+id/accelX"
+        android:layout_below="@+id/accelInfo"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+            style="@style/MyActionBarTitleText"
+            android:gravity="center"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/accel_y"
+            android:id="@+id/accelY"
+        android:layout_below="@+id/accelX"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+            style="@style/MyActionBarTitleText"
+            android:gravity="center"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/accel_z"
+            android:id="@+id/accelZ"
+        android:layout_below="@+id/accelY"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/activityTypeText"
+        android:layout_above="@+id/linearLayout3"
+        android:layout_centerHorizontal="true"
+        android:inputType="text" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="@string/activity_type"
+        android:id="@+id/textView"
+        android:layout_above="@+id/activityTypeText"
+        android:layout_centerHorizontal="true" />
 </RelativeLayout>

@@ -39,7 +39,8 @@
 
         <activity
                 android:name=".activities.TutorialPagerActivity"
-                android:launchMode="standard">
+                android:launchMode="standard"
+                android:screenOrientation="portrait">
         </activity>
 
         <activity
@@ -54,13 +55,15 @@
 
         <activity
                 android:name="com.ibm.iot.android.iotstarter.activities.ProfilesActivity"
-                android:launchMode="standard">
+                android:launchMode="standard"
+                android:screenOrientation="portrait">
         </activity>
 
         <activity
                 android:name="com.ibm.iot.android.iotstarter.activities.WebActivity"
                 android:launchMode="standard"
-                android:configChanges="orientation|screenSize">
+                android:configChanges="orientation|screenSize"
+                android:screenOrientation="portrait">
         </activity>
 
         <meta-data
