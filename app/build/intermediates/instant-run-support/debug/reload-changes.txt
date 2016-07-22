@@ -1,2 +1,0 @@
-CHANGED,/home/ramindu/Projects/iot-starter-for-android/app/build/intermediates/transforms/instantRun/debug/folders/4000/5/enhanced/com/ibm/iot/android/iotstarter/utils/MessageFactory$override.class
-CHANGED,/home/ramindu/Projects/iot-starter-for-android/app/build/intermediates/transforms/instantRun/debug/folders/4000/5/enhanced/com/android/tools/fd/runtime/AppPatchesLoaderImpl.class
