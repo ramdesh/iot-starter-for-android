@@ -58,8 +58,6 @@ public class MainPagerActivity extends FragmentActivity {
         }
 
         this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-        IoTStarterApplication app = (IoTStarterApplication) getApplication();
-        app.setCurrentActivity(this);
 
     }
 

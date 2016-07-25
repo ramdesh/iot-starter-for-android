@@ -147,9 +147,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/activityTypeText"
-        android:layout_above="@+id/linearLayout3"
-        android:layout_centerHorizontal="true"
-        android:inputType="text" />
+        android:inputType="text"
+        android:layout_below="@+id/textView"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -157,6 +158,17 @@
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="@string/activity_type"
         android:id="@+id/textView"
-        android:layout_above="@+id/activityTypeText"
+        android:layout_centerVertical="true"
         android:layout_centerHorizontal="true" />
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/send_activity"
+        android:id="@+id/sendActivityButton"
+        android:layout_above="@+id/linearLayout3"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
 </RelativeLayout>

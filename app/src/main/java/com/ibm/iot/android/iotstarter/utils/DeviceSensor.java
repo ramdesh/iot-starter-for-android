@@ -22,10 +22,8 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.util.Log;
-import android.widget.EditText;
 
 import com.ibm.iot.android.iotstarter.IoTStarterApplication;
-import com.ibm.iot.android.iotstarter.R;
 import com.ibm.iot.android.iotstarter.iot.IoTClient;
 import org.eclipse.paho.client.mqttv3.MqttException;
 
@@ -49,8 +47,6 @@ public class DeviceSensor implements SensorEventListener {
     private final Context context;
     private Timer timer;
     private boolean isEnabled = false;
-
-    private EditText activityTypeEditText;
 
     private DeviceSensor(Context context) {
         this.context = context;
@@ -181,8 +177,7 @@ public class DeviceSensor implements SensorEventListener {
                 lon = app.getCurrentLocation().getLongitude();
                 lat = app.getCurrentLocation().getLatitude();
             }
-            activityTypeEditText = (EditText)app.getCurrentActivity().findViewById(R.id.activityTypeText);
-            String messageData = MessageFactory.getAccelMessage(A, G, M, lon, lat, pressure, activityTypeEditText.getText().toString());
+            String messageData = MessageFactory.getAccelMessage(A, G, M, lon, lat, pressure, IoTStarterApplication.getCurrentActivityType());
 
             try {
                 // create ActionListener to handle message published results

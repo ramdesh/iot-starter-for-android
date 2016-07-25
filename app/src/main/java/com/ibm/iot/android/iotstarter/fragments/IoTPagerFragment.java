@@ -26,6 +26,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import com.ibm.iot.android.iotstarter.IoTStarterApplication;
 import com.ibm.iot.android.iotstarter.R;
 import com.ibm.iot.android.iotstarter.iot.IoTClient;
@@ -112,7 +114,17 @@ public class IoTPagerFragment extends IoTStarterPagerFragment {
         context = getActivity().getApplicationContext();
 
         updateViewStrings();
-
+        Button sendActivityButton = (Button)getActivity().findViewById(R.id.sendActivityButton);
+        sendActivityButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                EditText activityTypeEditText = (EditText) getActivity().findViewById(R.id.activityTypeText);
+                String activityType = activityTypeEditText.getText().toString();
+                IoTStarterApplication.setCurrentActivityType(activityType);
+                Toast.makeText(getActivity().getApplicationContext(),
+                        "Activity has been set to " + activityType, Toast.LENGTH_SHORT).show();
+            }
+        });
         drawingView = (DrawingView) getActivity().findViewById(R.id.drawing);
         drawingView.setContext(context);
     }
