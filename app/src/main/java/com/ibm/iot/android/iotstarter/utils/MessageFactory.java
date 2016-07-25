@@ -53,29 +53,21 @@ public class MessageFactory {
         JSONObject d = new JSONObject();
 
         try {
-            JSONObject accelerometer = new JSONObject();
-            accelerometer.put("x", A[0]);
-            accelerometer.put("y", A[1]);
-            accelerometer.put("z", A[2]);
+            d.put("accelerometer_x", A[0]);
+            d.put("accelerometer_y", A[1]);
+            d.put("accelerometer_z", A[2]);
 
-            JSONObject gyroscope = new JSONObject();
-            gyroscope.put("x", G[0]);
-            gyroscope.put("y", G[1]);
-            gyroscope.put("z", G[2]);
+            d.put("gyroscope_x", G[0]);
+            d.put("gyroscope_y", G[1]);
+            d.put("gyroscope_z", G[2]);
 
-            JSONObject magnetometer = new JSONObject();
-            magnetometer.put("x", M[0]);
-            magnetometer.put("y", M[1]);
-            magnetometer.put("z", M[2]);
+            d.put("lat", lat);
+            d.put("lon", lon);
 
-            JSONObject location = new JSONObject();
-            location.put("lat", lat);
-            location.put("long", lon);
+            d.put("magnetometer_x", M[0]);
+            d.put("magnetometer_y", M[1]);
+            d.put("magnetometer_z", M[2]);
 
-            d.put("accelerometer", accelerometer);
-            d.put("gyroscope", gyroscope);
-            d.put("gps", location);
-            d.put("magnetometer", magnetometer);
             d.put("pressure", pressure);
             d.put("activity", activity);
             d.put("timestamp", nowAsISO);

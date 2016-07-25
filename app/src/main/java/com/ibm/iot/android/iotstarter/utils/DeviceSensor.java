@@ -60,7 +60,7 @@ public class DeviceSensor implements SensorEventListener {
         gyroscope = sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
         pressureSensor = sensorManager.getDefaultSensor(Sensor.TYPE_PRESSURE);
         app = (IoTStarterApplication) context.getApplicationContext();
-        activityTypeEditText = (EditText)app.getCurrentActivity().findViewById(R.id.activityTypeText);
+
     }
 
     /**
@@ -142,14 +142,14 @@ public class DeviceSensor implements SensorEventListener {
                     + sensorEvent.values[1] + " z: " + sensorEvent.values[2]);
             G = sensorEvent.values;
         }
-        if (A != null && M != null) {
+        /*if (A != null && M != null) {
             if (SensorManager.getRotationMatrix(ROT, I, A, M)) {
                 float[] previousO = O.clone();
                 O = SensorManager.getOrientation(ROT, O);
                 yaw = O[0] - previousO[0];
                 Log.v(TAG, "Orientation: azimuth: " + O[0] + " pitch: " + O[1] + " roll: " + O[2] + " yaw: " + yaw);
             }
-        }
+        }*/
     }
 
     /**
@@ -181,7 +181,7 @@ public class DeviceSensor implements SensorEventListener {
                 lon = app.getCurrentLocation().getLongitude();
                 lat = app.getCurrentLocation().getLatitude();
             }
-
+            activityTypeEditText = (EditText)app.getCurrentActivity().findViewById(R.id.activityTypeText);
             String messageData = MessageFactory.getAccelMessage(A, G, M, lon, lat, pressure, activityTypeEditText.getText().toString());
 
             try {
