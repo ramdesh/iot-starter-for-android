@@ -40,6 +40,7 @@ public class DeviceSensor implements SensorEventListener {
     private static DeviceSensor instance;
     private final IoTStarterApplication app;
     private final SensorManager sensorManager;
+    private final Sensor linearAcceleration;
     private final Sensor accelerometer;
     private final Sensor magnetometer;
     private final Sensor gyroscope;
@@ -52,6 +53,7 @@ public class DeviceSensor implements SensorEventListener {
         this.context = context;
         sensorManager = (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
         accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+        linearAcceleration = sensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION);
         magnetometer = sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
         gyroscope = sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
         pressureSensor = sensorManager.getDefaultSensor(Sensor.TYPE_PRESSURE);
@@ -78,6 +80,7 @@ public class DeviceSensor implements SensorEventListener {
         Log.i(TAG, ".enableSensor() entered");
         if (!isEnabled) {
             sensorManager.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_NORMAL);
+            sensorManager.registerListener(this, linearAcceleration, SensorManager.SENSOR_DELAY_NORMAL);
             sensorManager.registerListener(this, gyroscope, SensorManager.SENSOR_DELAY_NORMAL);
             sensorManager.registerListener(this, magnetometer, SensorManager.SENSOR_DELAY_NORMAL);
             sensorManager.registerListener(this, pressureSensor, SensorManager.SENSOR_DELAY_NORMAL);
@@ -103,6 +106,7 @@ public class DeviceSensor implements SensorEventListener {
     private float[] A = new float[3]; // gravity x,y,z
     private float[] M = new float[3]; // geomagnetic field x,y,z
     private float[] G = new float[3]; // gyroscope values x,y,z
+    private float[] accel = new float[3];
     private float pressure; // Barometric Pressure
     private final float[] ROT = new float[9]; // rotation matrix
     private final float[] I = new float[9]; // inclination matrix
@@ -126,6 +130,10 @@ public class DeviceSensor implements SensorEventListener {
                     + sensorEvent.values[1] + " z: " + sensorEvent.values[2]);
             A = sensorEvent.values;
 
+        } else if(sensorEvent.sensor.getType() == Sensor.TYPE_LINEAR_ACCELERATION) {
+            Log.v(TAG, "Linear Acceleration -- x: " + sensorEvent.values[0] + " y: "
+                    + sensorEvent.values[1] + " z: " + sensorEvent.values[2]);
+            accel = sensorEvent.values;
         } else if (sensorEvent.sensor.getType() == Sensor.TYPE_MAGNETIC_FIELD) {
             Log.v(TAG, "Magnetometer -- x: " + sensorEvent.values[0] + " y: "
                     + sensorEvent.values[1] + " z: " + sensorEvent.values[2]);
@@ -177,7 +185,7 @@ public class DeviceSensor implements SensorEventListener {
                 lon = app.getCurrentLocation().getLongitude();
                 lat = app.getCurrentLocation().getLatitude();
             }
-            String messageData = MessageFactory.getAccelMessage(A, G, M, lon, lat, pressure, IoTStarterApplication.getCurrentActivityType());
+            String messageData = MessageFactory.getAccelMessage(A, accel, G, M, lon, lat, pressure, IoTStarterApplication.getCurrentActivityType());
 
             try {
                 // create ActionListener to handle message published results

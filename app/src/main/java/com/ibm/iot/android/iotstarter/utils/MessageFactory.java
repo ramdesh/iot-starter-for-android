@@ -42,7 +42,7 @@ public class MessageFactory {
      * @param activity String describing the activity that is being executed
      * @return String containing JSON formatted message
      */
-    public static String getAccelMessage(float A[], float G[], float M[], double lon, double lat, double pressure, String activity) {
+    public static String getAccelMessage(float A[], float accel[], float G[], float M[], double lon, double lat, double pressure, String activity) {
 
         TimeZone tz = TimeZone.getTimeZone("UTC");
         DateFormat df = new SimpleDateFormat("yyyy-MM-ddHH:mm:ss"); // Quoted "Z" to indicate UTC, no timezone offset
@@ -56,6 +56,10 @@ public class MessageFactory {
             d.put("accelerometer_x", A[0]);
             d.put("accelerometer_y", A[1]);
             d.put("accelerometer_z", A[2]);
+
+            d.put("linear_acceleration_x", accel[0]);
+            d.put("linear_acceleration_y", accel[1]);
+            d.put("linear_acceleration_z", accel[2]);
 
             d.put("gyroscope_x", G[0]);
             d.put("gyroscope_y", G[1]);
