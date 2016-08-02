@@ -45,7 +45,7 @@ public class MessageFactory {
     public static String getAccelMessage(float A[], float G[], float M[], double lon, double lat, double pressure, String activity) {
 
         TimeZone tz = TimeZone.getTimeZone("UTC");
-        DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'"); // Quoted "Z" to indicate UTC, no timezone offset
+        DateFormat df = new SimpleDateFormat("yyyy-MM-ddHH:mm:ss"); // Quoted "Z" to indicate UTC, no timezone offset
         df.setTimeZone(tz);
         String nowAsISO = df.format(new Date());
 
