@@ -17,6 +17,7 @@ package com.ibm.iot.android.iotstarter.utils;
 
 import android.util.Log;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -42,7 +43,8 @@ public class MessageFactory {
      * @param activity String describing the activity that is being executed
      * @return String containing JSON formatted message
      */
-    public static String getAccelMessage(float A[], float accel[], float G[], float M[], double lon, double lat, double pressure, String activity) {
+    public static String getAccelMessage(float A[], float accel[], float G[], float M[], double lon,
+                                         double lat, double pressure, String activity, String deviceId) {
 
         TimeZone tz = TimeZone.getTimeZone("UTC");
         DateFormat df = new SimpleDateFormat("yyyy-MM-ddHH:mm:ss"); // Quoted "Z" to indicate UTC, no timezone offset
@@ -50,10 +52,9 @@ public class MessageFactory {
         String nowAsISO = df.format(new Date());
 
         JSONObject message = new JSONObject();
-        JSONObject d = new JSONObject();
 
         try {
-            d.put("accelerometer_x", A[0]);
+            /*d.put("accelerometer_x", A[0]);
             d.put("accelerometer_y", A[1]);
             d.put("accelerometer_z", A[2]);
 
@@ -74,9 +75,30 @@ public class MessageFactory {
 
             d.put("pressure", pressure);
             d.put("activity", activity);
-            d.put("timestamp", nowAsISO);
+            d.put("timestamp", nowAsISO);*/
 
-            message.put("d", d);
+            String dataString = deviceId + "|"
+                    + nowAsISO + "|"
+                    + /*altimeter*/"1.1" + "|"
+                    + /*humidityVal*/"70" + "|"
+                    + /*humidityTempVal*/"28" + "|"
+                    + /*pressure*/"1.101011" + "|" + /*pressure*/ "1.101011" + "|" + /*pressure*/"1.101011" + "|"
+                    + /*pressure*/"1.101011" + "|" + /*pressure*/"1.101011" + "|" + /*pressure*/"1.101011" + "|"
+                    + lat + "|" + lon
+                    + /*Gyro front left*/ createDataString(G) + /*Gyro front right*/ createDataString(G)
+                    + /*Gyro back left*/ createDataString(G) + /*Gyro back right*/ createDataString(G)
+                    + /*Gyro side left*/ createDataString(G) + /*Gyro side right*/ createDataString(G)
+                    + /*Accelerometer front left*/ createDataString(A) + /*Accelerometer front right*/ createDataString(A)
+                    + /*Accelerometer back left*/ createDataString(A) + /*Accelerometer back right*/ createDataString(A)
+                    + /*Accelerometer side left*/ createDataString(A) + /*Accelerometer side right*/ createDataString(A)
+                    + /*magnetometer*/ createDataString(M);
+
+            JSONArray jsonArray = new JSONArray();
+            for (int i = 0; i < 6; i++) {
+                jsonArray.put(i, dataString);
+            }
+
+            message.put("data", jsonArray);
 
         } catch(JSONException jsone) {
             Log.e(TAG, jsone.getMessage());
@@ -94,6 +116,17 @@ public class MessageFactory {
                 "\"pressure\":" + pressure + " " +
                 "} }";*/
         return message.toString();
+    }
+
+    private static String createDataString(float[] dataArray) {
+
+        String dataString = null;
+
+        for (int i = 0; i < dataArray.length; i++) {
+            dataString = dataString + "|" + dataArray[i];
+        }
+
+        return dataString;
     }
 
     /**

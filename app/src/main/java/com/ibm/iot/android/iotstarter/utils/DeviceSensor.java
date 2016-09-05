@@ -17,6 +17,7 @@ package com.ibm.iot.android.iotstarter.utils;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -47,6 +48,7 @@ public class DeviceSensor implements SensorEventListener {
     private final Sensor pressureSensor;
     private final Context context;
     private Timer timer;
+    private SharedPreferences settings;
     private boolean isEnabled = false;
 
     private DeviceSensor(Context context) {
@@ -58,7 +60,7 @@ public class DeviceSensor implements SensorEventListener {
         gyroscope = sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
         pressureSensor = sensorManager.getDefaultSensor(Sensor.TYPE_PRESSURE);
         app = (IoTStarterApplication) context.getApplicationContext();
-
+        settings = app.getSharedPreferences(Constants.SETTINGS, 0);
     }
 
     /**
@@ -185,7 +187,9 @@ public class DeviceSensor implements SensorEventListener {
                 lon = app.getCurrentLocation().getLongitude();
                 lat = app.getCurrentLocation().getLatitude();
             }
-            String messageData = MessageFactory.getAccelMessage(A, accel, G, M, lon, lat, pressure, IoTStarterApplication.getCurrentActivityType());
+            String deviceId = settings.getString(Constants.DEVICE_ID, null);
+            String messageData = MessageFactory.getAccelMessage(A, accel, G, M, lon, lat, pressure,
+                    IoTStarterApplication.getCurrentActivityType(), deviceId);
 
             try {
                 // create ActionListener to handle message published results
