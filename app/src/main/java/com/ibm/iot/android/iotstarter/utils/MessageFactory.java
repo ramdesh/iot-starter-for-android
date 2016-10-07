@@ -46,15 +46,26 @@ public class MessageFactory {
     public static String getAccelMessage(float A[], float accel[], float G[], float M[], double lon,
                                          double lat, double pressure, String activity, String deviceId) {
 
+
         TimeZone tz = TimeZone.getTimeZone("UTC");
         DateFormat df = new SimpleDateFormat("yyyy-MM-ddHH:mm:ss"); // Quoted "Z" to indicate UTC, no timezone offset
         df.setTimeZone(tz);
         String nowAsISO = df.format(new Date());
-
         JSONObject message = new JSONObject();
+        JSONObject d = new JSONObject();
+
+        /** Force calculation
+         *
+         *
+         */
+        double gmag = Math.sqrt(Math.pow(G[0], 2) + Math.pow(G[1], 2) + Math.pow(G[2],2));
+        double amag = Math.sqrt(Math.pow(A[0], 2) + Math.pow(A[1], 2) + Math.pow(A[2],2));
+        double theta = G[0];
+        //((gmag * sin θ) – amag) / (gmag * cos θ)
+        double force = (gmag * Math.sin(Math.toRadians(theta)) - amag) / (gmag * Math.cos(Math.toRadians(theta)));
 
         try {
-            /*d.put("accelerometer_x", A[0]);
+            d.put("accelerometer_x", A[0]);
             d.put("accelerometer_y", A[1]);
             d.put("accelerometer_z", A[2]);
 
@@ -73,32 +84,34 @@ public class MessageFactory {
             d.put("magnetometer_y", M[1]);
             d.put("magnetometer_z", M[2]);
 
+            d.put("force", force);
+
             d.put("pressure", pressure);
             d.put("activity", activity);
-            d.put("timestamp", nowAsISO);*/
+            d.put("timestamp", nowAsISO);
 
-            String dataString = deviceId + "|"
-                    + nowAsISO + "|"
-                    + /*altimeter*/"1.1" + "|"
-                    + /*humidityVal*/"70" + "|"
-                    + /*humidityTempVal*/"28" + "|"
-                    + /*pressure*/"1.101011" + "|" + /*pressure*/ "1.101011" + "|" + /*pressure*/"1.101011" + "|"
-                    + /*pressure*/"1.101011" + "|" + /*pressure*/"1.101011" + "|" + /*pressure*/"1.101011" + "|"
-                    + lat + "|" + lon
-                    + /*Gyro front left*/ createDataString(G) + /*Gyro front right*/ createDataString(G)
-                    + /*Gyro back left*/ createDataString(G) + /*Gyro back right*/ createDataString(G)
-                    + /*Gyro side left*/ createDataString(G) + /*Gyro side right*/ createDataString(G)
-                    + /*Accelerometer front left*/ createDataString(A) + /*Accelerometer front right*/ createDataString(A)
-                    + /*Accelerometer back left*/ createDataString(A) + /*Accelerometer back right*/ createDataString(A)
-                    + /*Accelerometer side left*/ createDataString(A) + /*Accelerometer side right*/ createDataString(A)
-                    + /*magnetometer*/ createDataString(M);
-
-            JSONArray jsonArray = new JSONArray();
-            for (int i = 0; i < 6; i++) {
-                jsonArray.put(i, dataString);
-            }
-
-            message.put("data", jsonArray);
+//            String dataString = deviceId + "|"
+//                    + nowAsISO + "|"
+//                    + /*altimeter*/"1.1" + "|"
+//                    + /*humidityVal*/"70" + "|"
+//                    + /*humidityTempVal*/"28" + "|"
+//                    + /*pressure*/"1.101011" + "|" + /*pressure*/ "1.101011" + "|" + /*pressure*/"1.101011" + "|"
+//                    + /*pressure*/"1.101011" + "|" + /*pressure*/"1.101011" + "|" + /*pressure*/"1.101011" + "|"
+//                    + lat + "|" + lon
+//                    + /*Gyro front left*/ createDataString(G) + /*Gyro front right*/ createDataString(G)
+//                    + /*Gyro back left*/ createDataString(G) + /*Gyro back right*/ createDataString(G)
+//                    + /*Gyro side left*/ createDataString(G) + /*Gyro side right*/ createDataString(G)
+//                    + /*Accelerometer front left*/ createDataString(A) + /*Accelerometer front right*/ createDataString(A)
+//                    + /*Accelerometer back left*/ createDataString(A) + /*Accelerometer back right*/ createDataString(A)
+//                    + /*Accelerometer side left*/ createDataString(A) + /*Accelerometer side right*/ createDataString(A)
+//                    + /*magnetometer*/ createDataString(M);
+//
+//            JSONArray jsonArray = new JSONArray();
+//            for (int i = 0; i < 6; i++) {
+//                jsonArray.put(i, dataString);
+//            }
+//
+            message.put("d", d);
 
         } catch(JSONException jsone) {
             Log.e(TAG, jsone.getMessage());
