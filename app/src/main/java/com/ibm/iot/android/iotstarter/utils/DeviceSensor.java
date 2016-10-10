@@ -46,6 +46,8 @@ public class DeviceSensor implements SensorEventListener {
     private final Sensor magnetometer;
     private final Sensor gyroscope;
     private final Sensor pressureSensor;
+    private final Sensor temperatureSensor;
+    private final Sensor humiditySensor;
     private final Context context;
     private Timer timer;
     private SharedPreferences settings;
@@ -59,6 +61,8 @@ public class DeviceSensor implements SensorEventListener {
         magnetometer = sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
         gyroscope = sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
         pressureSensor = sensorManager.getDefaultSensor(Sensor.TYPE_PRESSURE);
+        temperatureSensor = sensorManager.getDefaultSensor(Sensor.TYPE_AMBIENT_TEMPERATURE);
+        humiditySensor = sensorManager.getDefaultSensor(Sensor.TYPE_RELATIVE_HUMIDITY);
         app = (IoTStarterApplication) context.getApplicationContext();
         settings = app.getSharedPreferences(Constants.SETTINGS, 0);
     }
@@ -86,6 +90,8 @@ public class DeviceSensor implements SensorEventListener {
             sensorManager.registerListener(this, gyroscope, SensorManager.SENSOR_DELAY_NORMAL);
             sensorManager.registerListener(this, magnetometer, SensorManager.SENSOR_DELAY_NORMAL);
             sensorManager.registerListener(this, pressureSensor, SensorManager.SENSOR_DELAY_NORMAL);
+            sensorManager.registerListener(this, temperatureSensor, SensorManager.SENSOR_DELAY_NORMAL);
+            sensorManager.registerListener(this, humiditySensor, SensorManager.SENSOR_DELAY_NORMAL);
             timer = new Timer();
             timer.scheduleAtFixedRate(new SendTimerTask(), 1000, 1000);
             isEnabled = true;
@@ -110,6 +116,8 @@ public class DeviceSensor implements SensorEventListener {
     private float[] G = new float[3]; // gyroscope values x,y,z
     private float[] accel = new float[3];
     private float pressure; // Barometric Pressure
+    private float temperature; //Ambient Temperature
+    private float humidity; // Relative humidity
     private final float[] ROT = new float[9]; // rotation matrix
     private final float[] I = new float[9]; // inclination matrix
     private float[] O = new float[3]; // orientation azimuth, pitch, roll
@@ -147,15 +155,21 @@ public class DeviceSensor implements SensorEventListener {
             Log.v(TAG, "Gyroscope -- x: " + sensorEvent.values[0] + " y: "
                     + sensorEvent.values[1] + " z: " + sensorEvent.values[2]);
             G = sensorEvent.values;
+        } else if (sensorEvent.sensor.getType() == Sensor.TYPE_AMBIENT_TEMPERATURE) {
+            Log.v(TAG, "Temperature " + sensorEvent.values[0]);
+            temperature = sensorEvent.values[0];
+        } else if (sensorEvent.sensor.getType() == Sensor.TYPE_RELATIVE_HUMIDITY) {
+            Log.v(TAG, "Humidity " + sensorEvent.values[0]);
+            humidity = sensorEvent.values[0];
         }
-        /*if (A != null && M != null) {
+        if (A != null && M != null) {
             if (SensorManager.getRotationMatrix(ROT, I, A, M)) {
                 float[] previousO = O.clone();
                 O = SensorManager.getOrientation(ROT, O);
                 yaw = O[0] - previousO[0];
                 Log.v(TAG, "Orientation: azimuth: " + O[0] + " pitch: " + O[1] + " roll: " + O[2] + " yaw: " + yaw);
             }
-        }*/
+        }
     }
 
     /**
@@ -188,8 +202,8 @@ public class DeviceSensor implements SensorEventListener {
                 lat = app.getCurrentLocation().getLatitude();
             }
             String deviceId = settings.getString(Constants.DEVICE_ID, null);
-            String messageData = MessageFactory.getAccelMessage(A, accel, G, M, lon, lat, pressure,
-                    IoTStarterApplication.getCurrentActivityType(), deviceId);
+            String messageData = MessageFactory.getAccelMessage(A, accel, G, M, lon, lat, pressure, yaw, temperature, humidity,
+                    IoTStarterApplication.getCurrentActivityType());
 
             try {
                 // create ActionListener to handle message published results

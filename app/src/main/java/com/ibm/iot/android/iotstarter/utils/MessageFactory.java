@@ -44,25 +44,25 @@ public class MessageFactory {
      * @return String containing JSON formatted message
      */
     public static String getAccelMessage(float A[], float accel[], float G[], float M[], double lon,
-                                         double lat, double pressure, String activity, String deviceId) {
+                                         double lat, double pressure, double yaw, double temperature, double humidity, String activity) {
 
 
         TimeZone tz = TimeZone.getTimeZone("UTC");
-        DateFormat df = new SimpleDateFormat("yyyy-MM-ddHH:mm:ss"); // Quoted "Z" to indicate UTC, no timezone offset
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"); // Quoted "Z" to indicate UTC, no timezone offset
         df.setTimeZone(tz);
         String nowAsISO = df.format(new Date());
         JSONObject message = new JSONObject();
         JSONObject d = new JSONObject();
-
+        temperature = temperature == 0 ? 30.0 : temperature;
+        humidity = humidity == 0 ? 70.0 : humidity;
         /** Force calculation
          *
          *
          */
         double gmag = Math.sqrt(Math.pow(G[0], 2) + Math.pow(G[1], 2) + Math.pow(G[2],2));
         double amag = Math.sqrt(Math.pow(A[0], 2) + Math.pow(A[1], 2) + Math.pow(A[2],2));
-        double theta = G[0];
         //((gmag * sin θ) – amag) / (gmag * cos θ)
-        double force = (gmag * Math.sin(Math.toRadians(theta)) - amag) / (gmag * Math.cos(Math.toRadians(theta)));
+        double force = (gmag * Math.sin(Math.toRadians(yaw)) - amag) / (gmag * Math.cos(Math.toRadians(yaw)));
 
         try {
             d.put("accelerometer_x", A[0]);
@@ -87,6 +87,8 @@ public class MessageFactory {
             d.put("force", force);
 
             d.put("pressure", pressure);
+            d.put("temperature", temperature);
+            d.put("humidity", humidity);
             d.put("activity", activity);
             d.put("timestamp", nowAsISO);
 
