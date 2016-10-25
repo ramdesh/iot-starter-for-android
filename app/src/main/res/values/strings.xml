@@ -120,6 +120,7 @@
     <string name="tutorial_pageC2_text">Step 1: Register a device of type \'Android\'\nStep 2: Enter your IoT Device Credentials\nStep 3: Press \'Activate Sensor\'</string>
     <string name="activity_type">Activity Type</string>
     <string name="send_activity">Set Activity Type</string>
+    <string name="send_data">Send Sensor Values</string>
     <!--string name="tutorial_pageC2_text">Step 1: Enter your IoT organization ID\nStep 2: Enter your device ID\nStep 3: Enter your Authorization Token</string-->
     <!-- End Tutorial Strings -->
 </resources>

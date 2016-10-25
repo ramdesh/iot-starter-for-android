@@ -86,16 +86,6 @@
                 android:text="@string/messages_published"
                 android:id="@+id/messagesPublishedView"
                 />
-        <TextView
-                style="@style/MyActionBarTitleText"
-                android:gravity="center"
-                android:paddingBottom="16dp"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:textAlignment="center"
-                android:text="@string/messages_received"
-                android:id="@+id/messagesReceivedView"
-                />
     </LinearLayout>
 
     <TextView
@@ -166,9 +156,16 @@
         android:layout_height="wrap_content"
         android:text="@string/send_activity"
         android:id="@+id/sendActivityButton"
-        android:layout_above="@+id/linearLayout3"
+        android:layout_below="@+id/activityTypeText"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
+        android:layout_marginTop="39dp" />
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/send_data"
+        android:id="@+id/sendSensorValuesButton"
+        android:layout_above="@+id/linearLayout3"
+        android:layout_centerHorizontal="true" />
 </RelativeLayout>

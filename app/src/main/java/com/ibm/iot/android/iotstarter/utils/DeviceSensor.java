@@ -15,6 +15,7 @@
  *******************************************************************************/
 package com.ibm.iot.android.iotstarter.utils;
 
+import android.bluetooth.BluetoothClass;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -28,6 +29,8 @@ import com.ibm.iot.android.iotstarter.IoTStarterApplication;
 import com.ibm.iot.android.iotstarter.iot.IoTClient;
 import org.eclipse.paho.client.mqttv3.MqttException;
 
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -53,6 +56,9 @@ public class DeviceSensor implements SensorEventListener {
     private SharedPreferences settings;
     private boolean isEnabled = false;
 
+
+    public static ArrayList<String> sensorValues;
+
     private DeviceSensor(Context context) {
         this.context = context;
         sensorManager = (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
@@ -63,6 +69,7 @@ public class DeviceSensor implements SensorEventListener {
         pressureSensor = sensorManager.getDefaultSensor(Sensor.TYPE_PRESSURE);
         temperatureSensor = sensorManager.getDefaultSensor(Sensor.TYPE_AMBIENT_TEMPERATURE);
         humiditySensor = sensorManager.getDefaultSensor(Sensor.TYPE_RELATIVE_HUMIDITY);
+        sensorValues = new ArrayList<>();
         app = (IoTStarterApplication) context.getApplicationContext();
         settings = app.getSharedPreferences(Constants.SETTINGS, 0);
     }
@@ -93,7 +100,7 @@ public class DeviceSensor implements SensorEventListener {
             sensorManager.registerListener(this, temperatureSensor, SensorManager.SENSOR_DELAY_NORMAL);
             sensorManager.registerListener(this, humiditySensor, SensorManager.SENSOR_DELAY_NORMAL);
             timer = new Timer();
-            timer.scheduleAtFixedRate(new SendTimerTask(), 1000, 1000);
+            timer.scheduleAtFixedRate(new SendTimerTask(), 200, 200);
             isEnabled = true;
         }
     }
@@ -172,6 +179,44 @@ public class DeviceSensor implements SensorEventListener {
         }
     }
 
+    public void sendData() {
+        Iterator<String> dataIterator = DeviceSensor.sensorValues.iterator();
+        //}
+        while(dataIterator.hasNext()) {
+            String messageData = dataIterator.next();
+            try {
+                // create ActionListener to handle message published results
+                MyIoTActionListener listener = new MyIoTActionListener(context, Constants.ActionStateStatus.PUBLISH);
+                IoTClient iotClient = IoTClient.getInstance(context);
+                if (app.getConnectionType() == Constants.ConnectionType.QUICKSTART) {
+                    iotClient.publishEvent(Constants.STATUS_EVENT, "json", messageData, 0, false, listener);
+                } else {
+                    iotClient.publishEvent(Constants.ACCEL_EVENT, "json", messageData, 0, false, listener);
+                }
+
+                int count = app.getPublishCount();
+                app.setPublishCount(++count);
+
+                //String runningActivity = app.getCurrentRunningActivity();
+                //if (runningActivity != null && runningActivity.equals(IoTPagerFragment.class.getName())) {
+                Intent actionIntent = new Intent(Constants.APP_ID + Constants.INTENT_IOT);
+                actionIntent.putExtra(Constants.INTENT_DATA, Constants.INTENT_DATA_PUBLISHED);
+                context.sendBroadcast(actionIntent);
+                //}
+            } catch (MqttException e) {
+                Log.d(TAG, ".run() received exception on publishEvent()");
+            }
+
+            app.setAccelData(A);
+
+            //String runningActivity = app.getCurrentRunningActivity();
+            //if (runningActivity != null && runningActivity.equals(IoTPagerFragment.class.getName())) {
+            Intent actionIntent = new Intent(Constants.APP_ID + Constants.INTENT_IOT);
+            actionIntent.putExtra(Constants.INTENT_DATA, Constants.ACCEL_EVENT);
+            context.sendBroadcast(actionIntent);
+        }
+    }
+
     /**
      * Callback for the SensorEventListener interface. Unused.
      *
@@ -205,37 +250,8 @@ public class DeviceSensor implements SensorEventListener {
             String messageData = MessageFactory.getAccelMessage(A, accel, G, M, lon, lat, pressure, yaw, temperature, humidity,
                     IoTStarterApplication.getCurrentActivityType());
 
-            try {
-                // create ActionListener to handle message published results
-                MyIoTActionListener listener = new MyIoTActionListener(context, Constants.ActionStateStatus.PUBLISH);
-                IoTClient iotClient = IoTClient.getInstance(context);
-                if (app.getConnectionType() == Constants.ConnectionType.QUICKSTART) {
-                    iotClient.publishEvent(Constants.STATUS_EVENT, "json", messageData, 0, false, listener);
-                } else {
-                    iotClient.publishEvent(Constants.ACCEL_EVENT, "json", messageData, 0, false, listener);
-                }
+            sensorValues.add(messageData);
 
-                int count = app.getPublishCount();
-                app.setPublishCount(++count);
-
-                //String runningActivity = app.getCurrentRunningActivity();
-                //if (runningActivity != null && runningActivity.equals(IoTPagerFragment.class.getName())) {
-                    Intent actionIntent = new Intent(Constants.APP_ID + Constants.INTENT_IOT);
-                    actionIntent.putExtra(Constants.INTENT_DATA, Constants.INTENT_DATA_PUBLISHED);
-                    context.sendBroadcast(actionIntent);
-                //}
-            } catch (MqttException e) {
-                Log.d(TAG, ".run() received exception on publishEvent()");
-            }
-
-            app.setAccelData(A);
-
-            //String runningActivity = app.getCurrentRunningActivity();
-            //if (runningActivity != null && runningActivity.equals(IoTPagerFragment.class.getName())) {
-                Intent actionIntent = new Intent(Constants.APP_ID + Constants.INTENT_IOT);
-                actionIntent.putExtra(Constants.INTENT_DATA, Constants.ACCEL_EVENT);
-                context.sendBroadcast(actionIntent);
-            //}
         }
     }
 }

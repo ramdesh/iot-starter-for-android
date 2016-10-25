@@ -32,10 +32,14 @@ import com.ibm.iot.android.iotstarter.IoTStarterApplication;
 import com.ibm.iot.android.iotstarter.R;
 import com.ibm.iot.android.iotstarter.iot.IoTClient;
 import com.ibm.iot.android.iotstarter.utils.Constants;
+import com.ibm.iot.android.iotstarter.utils.DeviceSensor;
 import com.ibm.iot.android.iotstarter.utils.MessageFactory;
 import com.ibm.iot.android.iotstarter.utils.MyIoTActionListener;
 import com.ibm.iot.android.iotstarter.views.DrawingView;
 import org.eclipse.paho.client.mqttv3.MqttException;
+
+import java.util.ArrayList;
+import java.util.Iterator;
 
 /**
  * The IoT Fragment is the main fragment of the application that will be displayed while the device is connected
@@ -115,6 +119,7 @@ public class IoTPagerFragment extends IoTStarterPagerFragment {
 
         updateViewStrings();
         Button sendActivityButton = (Button)getActivity().findViewById(R.id.sendActivityButton);
+        Button sendDataButton = (Button)getActivity().findViewById(R.id.sendSensorValuesButton);
         sendActivityButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -123,6 +128,13 @@ public class IoTPagerFragment extends IoTStarterPagerFragment {
                 IoTStarterApplication.setCurrentActivityType(activityType);
                 Toast.makeText(getActivity().getApplicationContext(),
                         "Activity has been set to " + activityType, Toast.LENGTH_SHORT).show();
+            }
+        });
+        sendDataButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DeviceSensor deviceSensor = DeviceSensor.getInstance(context);
+                deviceSensor.sendData();
             }
         });
         drawingView = (DrawingView) getActivity().findViewById(R.id.drawing);
