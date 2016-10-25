@@ -200,7 +200,9 @@ public class DeviceSensor implements SensorEventListener {
                 }
                 Toast.makeText(context, "Published data to IoTF", Toast.LENGTH_SHORT).show();
                 app.setPublishCount(0);
-
+                Intent actionIntent = new Intent(Constants.APP_ID + Constants.INTENT_IOT);
+                actionIntent.putExtra(Constants.INTENT_DATA, Constants.INTENT_DATA_PUBLISHED);
+                context.sendBroadcast(actionIntent);
                 //String runningActivity = app.getCurrentRunningActivity();
                 //if (runningActivity != null && runningActivity.equals(IoTPagerFragment.class.getName())) {
 
@@ -251,7 +253,7 @@ public class DeviceSensor implements SensorEventListener {
                 app.setAccelData(A);
 
                 Intent actionIntent = new Intent(Constants.APP_ID + Constants.INTENT_IOT);
-                actionIntent.putExtra(Constants.INTENT_DATA, Constants.INTENT_DATA_PUBLISHED);
+                actionIntent.putExtra(Constants.INTENT_DATA, Constants.ACCEL_EVENT);
                 context.sendBroadcast(actionIntent);
 
             }
