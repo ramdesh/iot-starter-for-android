@@ -144,30 +144,30 @@ public class DeviceSensor implements SensorEventListener {
 
 
         if (sensorEvent.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
-            Log.v(TAG, "Accelerometer -- x: " + sensorEvent.values[0] + " y: "
-                    + sensorEvent.values[1] + " z: " + sensorEvent.values[2]);
+            //Log.v(TAG, "Accelerometer -- x: " + sensorEvent.values[0] + " y: "
+            //        + sensorEvent.values[1] + " z: " + sensorEvent.values[2]);
             A = sensorEvent.values;
 
         } else if(sensorEvent.sensor.getType() == Sensor.TYPE_LINEAR_ACCELERATION) {
-            Log.v(TAG, "Linear Acceleration -- x: " + sensorEvent.values[0] + " y: "
-                    + sensorEvent.values[1] + " z: " + sensorEvent.values[2]);
+            //Log.v(TAG, "Linear Acceleration -- x: " + sensorEvent.values[0] + " y: "
+            //        + sensorEvent.values[1] + " z: " + sensorEvent.values[2]);
             accel = sensorEvent.values;
         } else if (sensorEvent.sensor.getType() == Sensor.TYPE_MAGNETIC_FIELD) {
-            Log.v(TAG, "Magnetometer -- x: " + sensorEvent.values[0] + " y: "
-                    + sensorEvent.values[1] + " z: " + sensorEvent.values[2]);
+            //Log.v(TAG, "Magnetometer -- x: " + sensorEvent.values[0] + " y: "
+            //        + sensorEvent.values[1] + " z: " + sensorEvent.values[2]);
             M = sensorEvent.values;
         } else if (sensorEvent.sensor.getType() == Sensor.TYPE_PRESSURE) {
-            Log.v(TAG, "Barometer -- : " + sensorEvent.values[0]);
+            //Log.v(TAG, "Barometer -- : " + sensorEvent.values[0]);
             pressure = sensorEvent.values[0];
         } else if (sensorEvent.sensor.getType() == Sensor.TYPE_GYROSCOPE) {
-            Log.v(TAG, "Gyroscope -- x: " + sensorEvent.values[0] + " y: "
-                    + sensorEvent.values[1] + " z: " + sensorEvent.values[2]);
+            //Log.v(TAG, "Gyroscope -- x: " + sensorEvent.values[0] + " y: "
+                    //+ sensorEvent.values[1] + " z: " + sensorEvent.values[2]);
             G = sensorEvent.values;
         } else if (sensorEvent.sensor.getType() == Sensor.TYPE_AMBIENT_TEMPERATURE) {
-            Log.v(TAG, "Temperature " + sensorEvent.values[0]);
+            //Log.v(TAG, "Temperature " + sensorEvent.values[0]);
             temperature = sensorEvent.values[0];
         } else if (sensorEvent.sensor.getType() == Sensor.TYPE_RELATIVE_HUMIDITY) {
-            Log.v(TAG, "Humidity " + sensorEvent.values[0]);
+            //Log.v(TAG, "Humidity " + sensorEvent.values[0]);
             humidity = sensorEvent.values[0];
         }
         if (A != null && M != null) {
@@ -175,7 +175,7 @@ public class DeviceSensor implements SensorEventListener {
                 float[] previousO = O.clone();
                 O = SensorManager.getOrientation(ROT, O);
                 yaw = O[0] - previousO[0];
-                Log.v(TAG, "Orientation: azimuth: " + O[0] + " pitch: " + O[1] + " roll: " + O[2] + " yaw: " + yaw);
+                //Log.v(TAG, "Orientation: azimuth: " + O[0] + " pitch: " + O[1] + " roll: " + O[2] + " yaw: " + yaw);
             }
         }
     }
@@ -208,7 +208,7 @@ public class DeviceSensor implements SensorEventListener {
 
                 //}
             } catch (MqttException e) {
-                Log.d(TAG, ".run() received exception on publishEvent()");
+                Log.d(TAG, ".sendData() received exception on publishEvent()");
             }
         }
     }
