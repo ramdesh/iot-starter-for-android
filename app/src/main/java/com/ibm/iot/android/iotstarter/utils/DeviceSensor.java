@@ -24,6 +24,7 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.ibm.iot.android.iotstarter.IoTStarterApplication;
 import com.ibm.iot.android.iotstarter.iot.IoTClient;
@@ -180,7 +181,11 @@ public class DeviceSensor implements SensorEventListener {
     }
 
     public void sendData() {
-        Iterator<String> dataIterator = DeviceSensor.sensorValues.iterator();
+        app.setWriteState(true);
+        ArrayList<String> dataToSend = (ArrayList<String>)DeviceSensor.sensorValues.clone();
+        DeviceSensor.sensorValues.removeAll(dataToSend);
+        app.setWriteState(false);
+        Iterator<String> dataIterator = dataToSend.iterator();
         //}
         while(dataIterator.hasNext()) {
             String messageData = dataIterator.next();
@@ -193,27 +198,16 @@ public class DeviceSensor implements SensorEventListener {
                 } else {
                     iotClient.publishEvent(Constants.ACCEL_EVENT, "json", messageData, 0, false, listener);
                 }
-
-                int count = app.getPublishCount();
-                app.setPublishCount(++count);
+                Toast.makeText(context, "Published data to IoTF", Toast.LENGTH_SHORT).show();
+                app.setPublishCount(0);
 
                 //String runningActivity = app.getCurrentRunningActivity();
                 //if (runningActivity != null && runningActivity.equals(IoTPagerFragment.class.getName())) {
-                Intent actionIntent = new Intent(Constants.APP_ID + Constants.INTENT_IOT);
-                actionIntent.putExtra(Constants.INTENT_DATA, Constants.INTENT_DATA_PUBLISHED);
-                context.sendBroadcast(actionIntent);
+
                 //}
             } catch (MqttException e) {
                 Log.d(TAG, ".run() received exception on publishEvent()");
             }
-
-            app.setAccelData(A);
-
-            //String runningActivity = app.getCurrentRunningActivity();
-            //if (runningActivity != null && runningActivity.equals(IoTPagerFragment.class.getName())) {
-            Intent actionIntent = new Intent(Constants.APP_ID + Constants.INTENT_IOT);
-            actionIntent.putExtra(Constants.INTENT_DATA, Constants.ACCEL_EVENT);
-            context.sendBroadcast(actionIntent);
         }
     }
 
@@ -239,19 +233,28 @@ public class DeviceSensor implements SensorEventListener {
         @Override
         public void run() {
             Log.v(TAG, "SendTimerTask.run() entered");
+            if(!app.getWriteState()) {
+                double lon = 0.0;
+                double lat = 0.0;
+                if (app.getCurrentLocation() != null) {
+                    lon = app.getCurrentLocation().getLongitude();
+                    lat = app.getCurrentLocation().getLatitude();
+                }
+                String deviceId = settings.getString(Constants.DEVICE_ID, null);
+                String messageData = MessageFactory.getAccelMessage(A, accel, G, M, lon, lat, pressure, yaw, temperature, humidity,
+                        IoTStarterApplication.getCurrentActivityType());
 
-            double lon = 0.0;
-            double lat = 0.0;
-            if (app.getCurrentLocation() != null) {
-                lon = app.getCurrentLocation().getLongitude();
-                lat = app.getCurrentLocation().getLatitude();
+                sensorValues.add(messageData);
+
+                int count = app.getPublishCount();
+                app.setPublishCount(++count);
+                app.setAccelData(A);
+
+                Intent actionIntent = new Intent(Constants.APP_ID + Constants.INTENT_IOT);
+                actionIntent.putExtra(Constants.INTENT_DATA, Constants.INTENT_DATA_PUBLISHED);
+                context.sendBroadcast(actionIntent);
+
             }
-            String deviceId = settings.getString(Constants.DEVICE_ID, null);
-            String messageData = MessageFactory.getAccelMessage(A, accel, G, M, lon, lat, pressure, yaw, temperature, humidity,
-                    IoTStarterApplication.getCurrentActivityType());
-
-            sensorValues.add(messageData);
-
         }
     }
 }

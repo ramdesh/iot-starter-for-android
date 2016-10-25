@@ -276,7 +276,6 @@ public class IoTPagerFragment extends IoTStarterPagerFragment {
         Log.v(TAG, ".processReceiveIntent() entered");
         String receivedString = this.getString(R.string.messages_received);
         receivedString = receivedString.replace("0",Integer.toString(app.getReceiveCount()));
-        ((TextView) getActivity().findViewById(R.id.messagesReceivedView)).setText(receivedString);
     }
 
     /**

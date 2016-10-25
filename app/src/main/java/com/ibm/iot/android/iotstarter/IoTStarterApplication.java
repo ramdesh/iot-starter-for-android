@@ -65,6 +65,7 @@ public class IoTStarterApplication extends Application {
     private boolean isCameraOn = false;
     private float[] accelData;
     private boolean accelEnabled = true;
+    private boolean writeState = false;
 
     private DeviceSensor deviceSensor;
     private Location currentLocation;
@@ -425,6 +426,14 @@ public class IoTStarterApplication extends Application {
 
     public Location getCurrentLocation() {
         return currentLocation;
+    }
+
+    public void setWriteState(boolean writeState) {
+        this.writeState = writeState;
+    }
+
+    public boolean getWriteState() {
+        return this.writeState;
     }
 
     public void setCurrentLocation(Location currentLocation) {

@@ -63,7 +63,7 @@
     <string name="accel_x">x: 0.0</string>
     <string name="accel_y">y: 0.0</string>
     <string name="accel_z">z: 0.0</string>
-    <string name="messages_published">Messages Published: 0</string>
+    <string name="messages_published">Messages Stored: 0</string>
     <string name="messages_received">Messages Received: 0</string>
     <string name="device_id_iot">Device ID: </string>
     <string name="device_id_iot_value">Device ID</string>

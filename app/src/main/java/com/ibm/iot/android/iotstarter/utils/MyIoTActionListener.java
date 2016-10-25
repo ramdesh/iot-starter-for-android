@@ -18,6 +18,8 @@ package com.ibm.iot.android.iotstarter.utils;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
+import android.widget.Toast;
+
 import com.ibm.iot.android.iotstarter.IoTStarterApplication;
 import com.ibm.iot.android.iotstarter.iot.IoTActionListener;
 import com.ibm.iot.android.iotstarter.iot.IoTClient;
@@ -165,6 +167,8 @@ public class MyIoTActionListener implements IoTActionListener {
     private void handleConnectFailure(Throwable throwable) {
         Log.e(TAG, ".handleConnectFailure() entered");
         Log.e(TAG, ".handleConnectFailure() - Failed with exception", throwable.getCause());
+        Toast.makeText(context,
+                "Failed to connect to IoTF", Toast.LENGTH_SHORT).show();
         throwable.printStackTrace();
 
         app.setConnected(false);
