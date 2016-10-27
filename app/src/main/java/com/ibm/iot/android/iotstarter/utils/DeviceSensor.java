@@ -15,7 +15,6 @@
  *******************************************************************************/
 package com.ibm.iot.android.iotstarter.utils;
 
-import android.bluetooth.BluetoothClass;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -198,19 +197,18 @@ public class DeviceSensor implements SensorEventListener {
                 } else {
                     iotClient.publishEvent(Constants.ACCEL_EVENT, "json", messageData, 0, false, listener);
                 }
-
-
-                Intent actionIntent = new Intent(Constants.APP_ID + Constants.INTENT_IOT);
-                actionIntent.putExtra(Constants.INTENT_DATA, Constants.INTENT_DATA_PUBLISHED);
-                context.sendBroadcast(actionIntent);
                 //String runningActivity = app.getCurrentRunningActivity();
                 //if (runningActivity != null && runningActivity.equals(IoTPagerFragment.class.getName())) {
 
                 //}
             } catch (MqttException e) {
+                Toast.makeText(context, "Encountered an issue when publishing message " + messageData, Toast.LENGTH_SHORT );
                 Log.d(TAG, ".sendData() received exception on publishEvent()");
             }
         }
+        Intent actionIntent = new Intent(Constants.APP_ID + Constants.INTENT_IOT);
+        actionIntent.putExtra(Constants.INTENT_DATA, Constants.INTENT_DATA_PUBLISHED);
+        context.sendBroadcast(actionIntent);
         app.setPublishCount(0);
         Toast.makeText(context, "Published data to IoTF", Toast.LENGTH_SHORT).show();
     }
