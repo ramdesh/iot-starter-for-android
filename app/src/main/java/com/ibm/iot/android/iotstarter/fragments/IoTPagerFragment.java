@@ -133,8 +133,8 @@ public class IoTPagerFragment extends IoTStarterPagerFragment {
         sendDataButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DeviceSensor deviceSensor = DeviceSensor.getInstance(context);
-                deviceSensor.sendData();
+            DeviceSensor deviceSensor = DeviceSensor.getInstance(context);
+            deviceSensor.sendData();
             }
         });
         drawingView = (DrawingView) getActivity().findViewById(R.id.drawing);

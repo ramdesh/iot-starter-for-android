@@ -198,8 +198,8 @@ public class DeviceSensor implements SensorEventListener {
                 } else {
                     iotClient.publishEvent(Constants.ACCEL_EVENT, "json", messageData, 0, false, listener);
                 }
-                Toast.makeText(context, "Published data to IoTF", Toast.LENGTH_SHORT).show();
-                app.setPublishCount(0);
+
+
                 Intent actionIntent = new Intent(Constants.APP_ID + Constants.INTENT_IOT);
                 actionIntent.putExtra(Constants.INTENT_DATA, Constants.INTENT_DATA_PUBLISHED);
                 context.sendBroadcast(actionIntent);
@@ -211,6 +211,8 @@ public class DeviceSensor implements SensorEventListener {
                 Log.d(TAG, ".sendData() received exception on publishEvent()");
             }
         }
+        app.setPublishCount(0);
+        Toast.makeText(context, "Published data to IoTF", Toast.LENGTH_SHORT).show();
     }
 
     /**
