@@ -119,7 +119,7 @@ public class IoTPagerFragment extends IoTStarterPagerFragment {
 
         updateViewStrings();
         Button sendActivityButton = (Button)getActivity().findViewById(R.id.sendActivityButton);
-        Button sendDataButton = (Button)getActivity().findViewById(R.id.sendSensorValuesButton);
+        //Button sendDataButton = (Button)getActivity().findViewById(R.id.sendSensorValuesButton);
         sendActivityButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -130,13 +130,13 @@ public class IoTPagerFragment extends IoTStarterPagerFragment {
                         "Activity has been set to " + activityType, Toast.LENGTH_SHORT).show();
             }
         });
-        sendDataButton.setOnClickListener(new View.OnClickListener() {
+        /*sendDataButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
             DeviceSensor deviceSensor = DeviceSensor.getInstance(context);
             deviceSensor.sendData();
             }
-        });
+        });*/
         drawingView = (DrawingView) getActivity().findViewById(R.id.drawing);
         drawingView.setContext(context);
     }

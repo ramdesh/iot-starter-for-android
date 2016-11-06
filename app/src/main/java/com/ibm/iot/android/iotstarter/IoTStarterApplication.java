@@ -48,6 +48,8 @@ public class IoTStarterApplication extends Application {
     private String deviceType;
     private String deviceId;
     private String authToken;
+    private int interval;
+
     private Constants.ConnectionType connectionType;
     private boolean useSSL = false;
 
@@ -136,6 +138,21 @@ public class IoTStarterApplication extends Application {
      * Called when old application stored settings values are found.
      * Converts old stored settings into new profile setting.
      */
+    /**
+     * Sets the time interval for message sending in mss
+     * @param interval The time interval
+     */
+    public void setTimeInterval(int interval) {
+        this.interval = interval;
+    }
+
+    /**
+     * Returns the time interval that has been currently set.
+     * @return int The time interval
+     */
+    public int getTimeInterval() {
+        return this.interval;
+    }
     private void createNewDefaultProfile() {
         Log.d(TAG, "organization not null. compat profile setup");
         // If old stored property settings exist, use them to create a new default profile.

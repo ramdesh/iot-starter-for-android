@@ -100,7 +100,7 @@ public class DeviceSensor implements SensorEventListener {
             sensorManager.registerListener(this, temperatureSensor, SensorManager.SENSOR_DELAY_NORMAL);
             sensorManager.registerListener(this, humiditySensor, SensorManager.SENSOR_DELAY_NORMAL);
             timer = new Timer();
-            timer.scheduleAtFixedRate(new SendTimerTask(), 200, 200);
+            timer.scheduleAtFixedRate(new SendTimerTask(), app.getTimeInterval(), app.getTimeInterval());
             isEnabled = true;
         }
     }
@@ -235,28 +235,45 @@ public class DeviceSensor implements SensorEventListener {
         @Override
         public void run() {
             Log.v(TAG, "SendTimerTask.run() entered");
-            if(!app.getWriteState()) {
-                double lon = 0.0;
-                double lat = 0.0;
-                if (app.getCurrentLocation() != null) {
-                    lon = app.getCurrentLocation().getLongitude();
-                    lat = app.getCurrentLocation().getLatitude();
-                }
-                String deviceId = settings.getString(Constants.DEVICE_ID, null);
-                String messageData = MessageFactory.getAccelMessage(A, accel, G, M, lon, lat, pressure, yaw, temperature, humidity,
-                        IoTStarterApplication.getCurrentActivityType());
-
-                sensorValues.add(messageData);
-
-                int count = app.getPublishCount();
-                app.setPublishCount(++count);
-                app.setAccelData(A);
-
-                Intent actionIntent = new Intent(Constants.APP_ID + Constants.INTENT_IOT);
-                actionIntent.putExtra(Constants.INTENT_DATA, Constants.ACCEL_EVENT);
-                context.sendBroadcast(actionIntent);
-
+            double lon = 0.0;
+            double lat = 0.0;
+            if (app.getCurrentLocation() != null) {
+                lon = app.getCurrentLocation().getLongitude();
+                lat = app.getCurrentLocation().getLatitude();
             }
+            String deviceId = settings.getString(Constants.DEVICE_ID, null);
+            String messageData = MessageFactory.getAccelMessage(A, accel, G, M, lon, lat, pressure, yaw, temperature, humidity,
+                    IoTStarterApplication.getCurrentActivityType());
+            try {
+                // create ActionListener to handle message published results
+                MyIoTActionListener listener = new MyIoTActionListener(context, Constants.ActionStateStatus.PUBLISH);
+                IoTClient iotClient = IoTClient.getInstance(context);
+                if (app.getConnectionType() == Constants.ConnectionType.QUICKSTART) {
+                    iotClient.publishEvent(Constants.STATUS_EVENT, "json", messageData, 0, false, listener);
+                } else {
+                    iotClient.publishEvent(Constants.ACCEL_EVENT, "json", messageData, 0, false, listener);
+                }
+                //String runningActivity = app.getCurrentRunningActivity();
+                //if (runningActivity != null && runningActivity.equals(IoTPagerFragment.class.getName())) {
+
+                //}
+                Intent actionIntent = new Intent(Constants.APP_ID + Constants.INTENT_IOT);
+                actionIntent.putExtra(Constants.INTENT_DATA, Constants.INTENT_DATA_PUBLISHED);
+                context.sendBroadcast(actionIntent);
+            } catch (MqttException e) {
+                Toast.makeText(context, "Encountered an issue when publishing message " + messageData, Toast.LENGTH_SHORT ).show();
+                Log.d(TAG, ".sendData() received exception on publishEvent()");
+            }
+            //sensorValues.add(messageData);
+
+            int count = app.getPublishCount();
+            app.setPublishCount(++count);
+            app.setAccelData(A);
+
+            Intent actionIntent = new Intent(Constants.APP_ID + Constants.INTENT_IOT);
+            actionIntent.putExtra(Constants.INTENT_DATA, Constants.ACCEL_EVENT);
+            context.sendBroadcast(actionIntent);
+
         }
     }
 }

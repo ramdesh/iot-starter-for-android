@@ -144,6 +144,9 @@ public class LoginPagerFragment extends IoTStarterPagerFragment {
             ((EditText) getActivity().findViewById(R.id.authTokenValue)).setText(app.getAuthToken());
         }
 
+        if (app.getTimeInterval() != 0) {
+            ((EditText) getActivity().findViewById(R.id.timeIntervalValue)).setText(app.getTimeInterval());
+        }
         // Set 'Connected to IoT' to Yes if MQTT client is connected. Leave as No otherwise.
         if (app.isConnected()) {
             updateConnectedValues();
@@ -244,6 +247,7 @@ public class LoginPagerFragment extends IoTStarterPagerFragment {
         app.setDeviceId(((EditText) getActivity().findViewById(R.id.deviceIDValue)).getText().toString());
         app.setOrganization(((EditText) getActivity().findViewById(R.id.organizationValue)).getText().toString());
         app.setAuthToken(((EditText) getActivity().findViewById(R.id.authTokenValue)).getText().toString());
+        app.setTimeInterval(Integer.valueOf(((EditText) getActivity().findViewById(R.id.timeIntervalValue)).getText().toString()));
         IoTClient iotClient = IoTClient.getInstance(context, app.getOrganization(), app.getDeviceId(), app.getDeviceType(), app.getAuthToken());
         activateButton.setEnabled(false);
         if (buttonTitle.equals(getResources().getString(R.string.activate_button)) && !app.isConnected()) {
