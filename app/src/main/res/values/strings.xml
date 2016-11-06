@@ -78,6 +78,7 @@
     <string name="organization_value">Organization</string>
     <string name="device_id_value">Device ID</string>
     <string name="auth_token_value">Auth Token</string>
+    <string name="time_interval_value">Time Interval</string>
 
     <string name="save_button">Save Settings</string>
 

@@ -144,7 +144,7 @@
             android:paddingBottom="@dimen/activity_setting_margin"
             android:paddingRight="@dimen/activity_horizontal_margin"
             android:paddingLeft="@dimen/activity_horizontal_margin"
-            android:hint="@string/device_id_value"
+            android:hint="@string/time_interval_value"
             android:inputType="textNoSuggestions"
             android:id="@+id/timeIntervalValue"
             android:text="200" />
