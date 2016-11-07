@@ -145,7 +145,7 @@ public class LoginPagerFragment extends IoTStarterPagerFragment {
         }
 
         if (app.getTimeInterval() != 0) {
-            ((EditText) getActivity().findViewById(R.id.timeIntervalValue)).setText(app.getTimeInterval());
+            //((EditText) getActivity().findViewById(R.id.timeIntervalValue)).setText(app.getTimeInterval());
         }
         // Set 'Connected to IoT' to Yes if MQTT client is connected. Leave as No otherwise.
         if (app.isConnected()) {
