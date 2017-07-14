@@ -69,9 +69,9 @@ public class MessageFactory {
             d.put("accelerometer_y", A[1]);
             d.put("accelerometer_z", A[2]);
 
-            d.put("linear_acceleration_x", accel[0]);
-            d.put("linear_acceleration_y", accel[1]);
-            d.put("linear_acceleration_z", accel[2]);
+            //d.put("linear_acceleration_x", accel[0]);
+            //d.put("linear_acceleration_y", accel[1]);
+            //d.put("linear_acceleration_z", accel[2]);
 
             d.put("gyroscope_x", G[0]);
             d.put("gyroscope_y", G[1]);
@@ -84,11 +84,11 @@ public class MessageFactory {
             d.put("magnetometer_y", M[1]);
             d.put("magnetometer_z", M[2]);
 
-            d.put("force", force);
+            //d.put("force", force);
 
             d.put("pressure", pressure);
-            d.put("temperature", temperature);
-            d.put("humidity", humidity);
+            //d.put("temperature", temperature);
+            //d.put("humidity", humidity);
             d.put("activity", activity);
             d.put("timestamp", nowAsISO);
 
